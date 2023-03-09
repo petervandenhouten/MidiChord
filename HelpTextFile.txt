@@ -1,0 +1,31 @@
+﻿Formatting
+----------
+
+All bars are 4/4: Each bar contains 4 quarter notes. 
+A queater note is one beat, so a bar contains also 4 beats.
+Other timings are not supported.
+
+C = 1 bar with C chord.
+C C = 2 bars with two times a C chord.
+C * = 2 bars with one time a C chord that is sustained into the second bar.
+
+C G Am F = 4 bars; 1st bar C chord, 2nd bar G chord, 3rd bar Am chord, 4rd bar F chord
+
+[C] = 1 beat with C chord.
+[C G] = 2 beats with C on 1st beat and G chord on 2nd beat
+[C * G] = 3 beats with C chord on 1st beat, no chords on second beat, and G chord on 3rd beat.
+[C G Am * ] = 1 bar (of 4 beats) with chords on first three beats. No chord on 4th beat.
+[C G Am F] = 1 bar with 4 different chords on every beat.
+[* * * C] = 1 bar with no chord on first three beats, and a C chord on the 4th beat
+
+(label) = a label used to indicate verses, chorus, breaks etc..
+
+# song text = A line of the song text
+
+/ = start of comment
+/ = end of comment
+
+{instrument} = an instrument change
+
+Future extensions:
+jumpto label = jumps towards a label.
