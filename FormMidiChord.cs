@@ -33,9 +33,6 @@ namespace MidiChord
         {
             InitializeComponent();
 
-            _metronomeInstrument1 = GeneralMidiInstrument.TaikoDrum;
-            _metronomeInstrument2 = GeneralMidiInstrument.Woodblock;
-
             // Load choard
             CreateChordNotes();
 
@@ -46,9 +43,9 @@ namespace MidiChord
             _midiLivePlayer.SongEnded += new Action(_midiLivePlayer_SongEnded);
 
             SetMIDIDevice(0);
-            SetBeatsPerMinute(200);
+            SetBeatsPerMinute(120);
             SetInstrument(GeneralMidiInstrument.AcousticGrandPiano);
-
+            SetMetronomeInstrument(GeneralMidiInstrument.TaikoDrum, GeneralMidiInstrument.Woodblock);
         }
 
         void _midiLivePlayer_SongEnded()
@@ -117,6 +114,12 @@ namespace MidiChord
             _StatusLabelInstrument.Text = generalMidiInstrument.ToString();
         }
 
+        private void SetMetronomeInstrument(GeneralMidiInstrument instrument1, GeneralMidiInstrument instrument2)
+        {
+            _metronomeInstrument1 = instrument1;
+            _metronomeInstrument2 = instrument2;
+        }
+
         private void SetBeatsPerMinute(int bpm)
         {
             _beatsPerMinute = bpm;
@@ -162,9 +165,9 @@ namespace MidiChord
                 List<SongItem> song = parser.ParseText(_textBox.Text);
 
                 _midiLivePlayer.BeatsPerMinute                  = _beatsPerMinute;
-                _midiLivePlayer.SongInstrument                  = (int)_instrument;
-                _midiLivePlayer.MetronomeFirstBeatInstrument    = (int)_metronomeInstrument1;
-                _midiLivePlayer.MetronomeInstrument             = (int)_metronomeInstrument2;
+                _midiLivePlayer.SongInstrument                  = _instrument;
+                _midiLivePlayer.MetronomeFirstBeatInstrument    = _metronomeInstrument1;
+                _midiLivePlayer.MetronomeInstrument             = _metronomeInstrument2;
 
                 _midiLivePlayer.SetSong(song);
 
@@ -331,14 +334,14 @@ namespace MidiChord
 
         private void setDefaultInstrumentToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            //InstrumentDialog dlg = new InstrumentDialog();
+            InstrumentDialog dlg = new InstrumentDialog();
 
-            //dlg.Instrument = _instrument;
+            dlg.Instrument = _instrument;
 
-            //if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    SetInstrument(dlg.Instrument);
-            //}
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SetInstrument(dlg.Instrument);
+            }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -376,14 +379,14 @@ namespace MidiChord
 
         private void setBeatsPerMinuteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //BeatDialog dlg = new BeatDialog();
+            BeatDialog dlg = new BeatDialog();
 
-            //dlg.BeatsPerMinute = _beatsPerMinute;
+            dlg.BeatsPerMinute = _beatsPerMinute;
 
-            //if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    SetBeatsPerMinute(dlg.BeatsPerMinute);
-            //}
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SetBeatsPerMinute(dlg.BeatsPerMinute);
+            }
         }
 
         private void debugLoggingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -399,6 +402,11 @@ namespace MidiChord
             // convert to track/sequence
             ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordNotes);
             midiConverter.SetSong(song);
+
+            midiConverter.BeatsPerMinute               = _beatsPerMinute;
+            midiConverter.SongInstrument               = _instrument;
+            midiConverter.MetronomeFirstBeatInstrument = _metronomeInstrument1;
+            midiConverter.MetronomeInstrument          = _metronomeInstrument2;
 
             // save sequence
             midiConverter.Save("test.mid");

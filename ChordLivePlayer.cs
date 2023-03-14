@@ -176,7 +176,7 @@ namespace MidiChord
             Reset();
             _countDown = 4;
             SetMidiInstrument();
-            _playbackTimer.Interval = base.GetBeatDelay(BeatsPerMinute);
+            _playbackTimer.Interval = base.GetBeatTimeInMs(BeatsPerMinute);
             _playbackTimer.Start();
         }
 

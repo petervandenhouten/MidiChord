@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MidiChord
 {
@@ -16,26 +17,28 @@ namespace MidiChord
         {
         }
 
-        private int get_division(int beatsPerMinutes)
+        private int get_division()
         {
-            float beatsPerSeconds = (float)beatsPerMinutes / 60;
-            float division = 1000 * (1 / beatsPerSeconds);
-            return 8333;
+            // Minimum PPQN value is 24, aka resolution of midifile
+            return 24;
         }
         private void create_track_from_song()
         {
-            int division = get_division(BeatsPerMinute);
+            int division = get_division(); 
 
-            int beat_delay = GetBeatDelay(BeatsPerMinute);
+            int beat_delay = GetBeatTimeInMs(BeatsPerMinute);
 
             _sequence = new Sanford.Multimedia.Midi.Sequence(division);
 
-            Track track = new Track();
+            Track track_chords    = new Track();
+            Track track_metronome = new Track();
             bool track_finised = false;
-
+            
             while (!track_finised)
             {
-                int beat_time = _beatIndex * beat_delay;
+                int beat_time = _beatIndex * division;
+
+                track_chords.Insert(0, GetMidiProgram(SongInstrument));
 
                 // find ALL notes on the beat index
                 foreach (var entry in _data)
@@ -48,12 +51,12 @@ namespace MidiChord
                         {
                             foreach (var midiEvent in _lastMidiChord.NotesOff)
                             {
-                                track.Insert(beat_time, midiEvent);
+                                track_chords.Insert(beat_time, midiEvent);
                             }
                         }
                         foreach (var midiEvent in midiChord.NotesOn)
                         {
-                            track.Insert(beat_time, midiEvent);
+                            track_chords.Insert(beat_time, midiEvent);
                         }
                         _lastMidiChord = midiChord;
                     }
@@ -61,16 +64,16 @@ namespace MidiChord
 
                 if (EnableMetronome == true)
                 {
-                    track.Insert(beat_time, _metronomeNoteOff.Result);
+                    track_metronome.Insert(beat_time, _metronomeNoteOff.Result);
                     if (_beatIndex % 4 == 0)
                     {
-                        track.Insert(beat_time, _metronomeFirstBeatInstrument.Result);
+                        track_metronome.Insert(beat_time, _metronomeFirstBeatInstrument.Result);
                     }
                     else
                     {
-                        track.Insert(beat_time, _metronomeBeatInstument.Result);
+                        track_metronome.Insert(beat_time, _metronomeBeatInstument.Result);
                     }
-                    track.Insert(beat_time, _metronomeNoteOn.Result);
+                    track_metronome.Insert(beat_time, _metronomeNoteOn.Result);
                 }
 
                 //// Notify client
@@ -87,21 +90,29 @@ namespace MidiChord
                     {
                         foreach (var midiEvent in _lastMidiChord.NotesOff)
                         {
-                            track.Insert(beat_time, midiEvent);
+                            track_chords.Insert(beat_time, midiEvent);
                         }
                     }
                     track_finised = true;
                 }
             }
 
-            _sequence.Add(track);
+            _sequence.Add(track_chords);
+            _sequence.Add(track_metronome);
         }
 
         public void Save(string filename)
         {
             create_track_from_song();
 
-            _sequence.Save(filename);
+            try
+            {
+                _sequence.Save(filename);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

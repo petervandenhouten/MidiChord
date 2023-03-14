@@ -26,9 +26,9 @@ namespace MidiChord
         protected ChannelMessageBuilder _metronomeNoteOn;
         protected ChannelMessageBuilder _metronomeNoteOff;
 
-        public int SongInstrument { get; set; }
-        public int MetronomeFirstBeatInstrument { get; set; }
-        public int MetronomeInstrument { get; set; }
+        public GeneralMidiInstrument SongInstrument { get; set; }
+        public GeneralMidiInstrument MetronomeFirstBeatInstrument { get; set; }
+        public GeneralMidiInstrument MetronomeInstrument { get; set; }
         public int BeatsPerMinute { get; set; }
         public int MetronomeMidiChannel { get; set; }
         public int SongMidiChannel { get; set; }
@@ -38,10 +38,10 @@ namespace MidiChord
         {
             _refChordNotes = chordNotes;
 
-            BeatsPerMinute = 60; // 1 beat (quarter note) per seconds, that a bar of 4 seconds.
-            SongInstrument = 1;
-            MetronomeFirstBeatInstrument = 122;
-            MetronomeInstrument = 123;
+            BeatsPerMinute = 60;
+            SongInstrument = GeneralMidiInstrument.AcousticGrandPiano;
+            MetronomeFirstBeatInstrument = GeneralMidiInstrument.Woodblock;
+            MetronomeInstrument = GeneralMidiInstrument.Agogo;
             MetronomeMidiChannel = 1;
             SongMidiChannel = 0;
             EnableMetronome = true;
@@ -72,13 +72,13 @@ namespace MidiChord
             _metronomeFirstBeatInstrument = new ChannelMessageBuilder();
             _metronomeFirstBeatInstrument.Command = ChannelCommand.ProgramChange;
             _metronomeFirstBeatInstrument.MidiChannel = MetronomeMidiChannel;
-            _metronomeFirstBeatInstrument.Data1 = MetronomeFirstBeatInstrument;
+            _metronomeFirstBeatInstrument.Data1 = (int)MetronomeFirstBeatInstrument;
             _metronomeFirstBeatInstrument.Build();
 
             _metronomeBeatInstument = new ChannelMessageBuilder();
             _metronomeBeatInstument.Command = ChannelCommand.ProgramChange;
             _metronomeBeatInstument.MidiChannel = MetronomeMidiChannel;
-            _metronomeBeatInstument.Data1 = MetronomeInstrument;
+            _metronomeBeatInstument.Data1 = (int)MetronomeInstrument;
             _metronomeBeatInstument.Build();
 
             _metronomeNoteOn = new ChannelMessageBuilder();
@@ -134,12 +134,12 @@ namespace MidiChord
             return newChord;
         }
 
-        protected ChannelMessage GetMidiProgram(int instrument)
+        protected ChannelMessage GetMidiProgram(GeneralMidiInstrument instrument)
         {
             ChannelMessageBuilder builder = new ChannelMessageBuilder();
             builder.Command = ChannelCommand.ProgramChange;
             builder.MidiChannel = 0;
-            builder.Data1 = instrument;
+            builder.Data1 = (int)instrument;
             builder.Build();
 
             return builder.Result;
@@ -172,13 +172,15 @@ namespace MidiChord
 
         }
 
-        protected int GetBeatDelay(int beatsPerMinute)
+        protected int GetBeatTimeInMs(int beatsPerMinute)
         {
-            int quarterDelay = (60 * 1000) / beatsPerMinute;
-            int beatDelay = quarterDelay / 4;
+            // BPM = 120
+            // BPS = 120/60 = 2
+            // BeatTime = 1/2 * 1000 ms
 
-            return beatDelay * 10;
-
+            float beatsPerSeconds = (float)beatsPerMinute / 60;
+            float beatTime = 1000 * (1 / beatsPerSeconds);
+            return (int)beatTime;
         }
 
         protected string[] GetNotesOfChord(string chord)

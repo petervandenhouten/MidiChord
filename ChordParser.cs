@@ -9,7 +9,7 @@ namespace MidiChord
 {
     public class ChordParser
     {
-        private enum ParserMode { BAR_CHORD, BEAT_CHORD, LABEL, SONG_TEXT, INSTRUMENT, COMMENT };
+        private enum ParserMode { MEASURE_CHORD, BEAT_CHORD, LABEL, SONG_TEXT, INSTRUMENT, COMMENT };
 
         //private Sequence _sequence;
         //private Track _track;
@@ -204,7 +204,7 @@ namespace MidiChord
             _beatIndex = 0;
 
             // Initialize parser
-            ParserMode mode = ParserMode.BAR_CHORD;
+            ParserMode mode = ParserMode.MEASURE_CHORD;
             int pointer = 0;
             int movepointer = 0;
             string chordStartCharacters = "ABCDEFG*";
@@ -232,7 +232,7 @@ namespace MidiChord
                     }
                     else
                     {
-                        mode = ParserMode.BAR_CHORD;
+                        mode = ParserMode.MEASURE_CHORD;
                     }
                 }
                 else if (txt.Substring(pointer, 1).Equals(@"("))
@@ -249,7 +249,7 @@ namespace MidiChord
                 }
                 else if (txt.Substring(pointer, 1).Equals(@"]"))
                 {
-                    mode = ParserMode.BAR_CHORD;
+                    mode = ParserMode.MEASURE_CHORD;
                 }
                 else // chord or nothing
                 {
@@ -269,7 +269,7 @@ namespace MidiChord
                 {
                     switch (mode)
                     {
-                        case ParserMode.BAR_CHORD:
+                        case ParserMode.MEASURE_CHORD:
                             movepointer = HandleBarChord(txt, pointer);
                             break;
                         case ParserMode.BEAT_CHORD:
@@ -285,15 +285,15 @@ namespace MidiChord
                             break;
                         case ParserMode.INSTRUMENT:
                             movepointer = HandleInstrument(txt, pointer);
-                            mode = ParserMode.BAR_CHORD;
+                            mode = ParserMode.MEASURE_CHORD;
                             break;
                         case ParserMode.LABEL:
                             movepointer = HandleLabel(txt, pointer);
-                            mode = ParserMode.BAR_CHORD;
+                            mode = ParserMode.MEASURE_CHORD;
                             break;
                         case ParserMode.SONG_TEXT:
                             movepointer = HandleSongText(txt,pointer);
-                            mode = ParserMode.BAR_CHORD;
+                            mode = ParserMode.MEASURE_CHORD;
                             break;
                         default: break;
                     }
