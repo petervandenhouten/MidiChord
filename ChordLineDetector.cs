@@ -28,6 +28,8 @@ namespace MidiChord
                 return true;
             }
 
+            // Check in the words are (known) chords
+
             return false;
         }
 

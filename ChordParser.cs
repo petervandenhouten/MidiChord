@@ -19,6 +19,13 @@ namespace MidiChord
         public string Year;
     }
 
+    public class LabelledPart
+    {
+        public string Name;
+        public int FirstLine;
+        public int LastLine;
+    }
+
     public class ChordParser
     {
         private enum ParserMode { CHORDS, COMMAND, LABEL, SONG_TEXT, COMMENT, DISABLE_PART };
@@ -32,6 +39,7 @@ namespace MidiChord
         private List<string> _logging;
         private int _beatIndex; // index of beat (position in song) during parsing
         private ParserMode _parserMode;
+        private List<LabelledPart> _labels;
 
         // Music data
         private string _key;
@@ -52,17 +60,11 @@ namespace MidiChord
         public ChordParser()
         {
             _refChordNotes = getNotesOfChords();
-            _logging = new List<string>();
-            _parserOutput = new List<SongItem>();
-            _metaData = new MetaData();
         }
 
         public ChordParser(Dictionary<string, string[]> chordNotes)
         {
             _refChordNotes = chordNotes;
-            _logging = new List<string>();
-            _parserOutput = new List<SongItem>();
-            _metaData = new MetaData();
         }
 
         public int ParseErrorMessage { get; private set; }
@@ -228,11 +230,7 @@ namespace MidiChord
 
         public List<SongItem> ParseText(string[] lines)
         {
-            // Initialize parser
-            _logging.Clear();
-            _beatIndex = 0;
-            _parserMode = ParserMode.CHORDS;
-            _parserOutput.Clear();
+            initializeParser();
 
             var chordProConvertor = new ChordProConverter();
             lines = chordProConvertor.Convert(lines);
@@ -245,6 +243,23 @@ namespace MidiChord
             }
 
             return _parserOutput;
+        }
+
+        private void initializeParser()
+        {
+            if (_logging == null) _logging = new List<string>();
+            _logging.Clear();
+
+            if(_parserOutput == null) _parserOutput = new List<SongItem>();
+            _parserOutput.Clear();
+
+
+            if(_labels == null) _labels = new List<LabelledPart>();
+            _labels.Clear();
+
+            _metaData = new MetaData();
+            _beatIndex = 0;
+            _parserMode = ParserMode.CHORDS;
         }
 
         private void parseLine(int lineNumber, string txt)
@@ -584,14 +599,29 @@ namespace MidiChord
             string label = txt.Substring(pos1 + 1, pos2 - pos1 - 1);
             label = label.Trim().ToLower();
 
-            addLabelStartLine(label, lineNumber);
+            addLabelFirstLine(label, lineNumber);
 
             return label;
         }
 
-        private void addLabelStartLine(string label, int lineNumber)
+        private void addLabelFirstLine(string label, int lineNumber)
         {
             Log(string.Format("Label '{0}' starts at line {1}", label, lineNumber));
+
+            var item = new LabelledPart
+            {
+                Name = label,
+                FirstLine = lineNumber
+            };
+
+            _labels.Add(item);
+        }
+
+        private void addLabelLastLine(string label, int lineNumber)
+        {
+            Log(string.Format("Label '{0}' ends at line {1}", label, lineNumber));
+
+            // Find the last label in the list with this name
         }
 
         private int handleSongText(string txt)
@@ -973,6 +1003,12 @@ namespace MidiChord
                 }
             }
             return count;
+        }
+
+        public int GetNumberOfLabelledParts()
+        {
+            if (_labels == null) return 0;
+            return _labels.Count;
         }
 
     }
