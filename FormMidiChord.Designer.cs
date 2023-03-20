@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMidiChord));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.exportMIDIFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,13 +61,28 @@
             this.debugSongToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._statusStrip = new System.Windows.Forms.StatusStrip();
             this._toolStripStatusPlaying = new System.Windows.Forms.ToolStripStatusLabel();
-            this._StatusLabelInstrument = new System.Windows.Forms.ToolStripStatusLabel();
+            this._statusChord = new System.Windows.Forms.ToolStripStatusLabel();
+            this._statusBeatIndex = new System.Windows.Forms.ToolStripStatusLabel();
             this._statusLabelBpm = new System.Windows.Forms.ToolStripStatusLabel();
+            this._StatusLabelInstrument = new System.Windows.Forms.ToolStripStatusLabel();
             this._statusMidiDevice = new System.Windows.Forms.ToolStripStatusLabel();
             this._textBox = new System.Windows.Forms.TextBox();
-            this._statusBeatIndex = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonPause = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonStop = new System.Windows.Forms.ToolStripButton();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this._statusStrip.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -80,7 +95,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(337, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(376, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -89,57 +104,51 @@
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
+            this.recentToolStripMenuItem,
             this.toolStripMenuItem2,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripMenuItem3,
             this.exportMIDIFileToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(35, 20);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
             this.toolStripMenuItem1.Text = "File";
             // 
             // newToolStripMenuItem
             // 
+            this.newToolStripMenuItem.Image = global::MidiChord.Properties.Resources.NewDocument;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
-            // openToolStripMenuItem
+            // recentToolStripMenuItem
             // 
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.openToolStripMenuItem.Text = "Open...";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
+            this.recentToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.recentToolStripMenuItem.Text = "Recent files";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(169, 6);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(161, 6);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.saveAsToolStripMenuItem.Text = "Save as...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(169, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(161, 6);
             // 
             // exportMIDIFileToolStripMenuItem
             // 
             this.exportMIDIFileToolStripMenuItem.Name = "exportMIDIFileToolStripMenuItem";
-            this.exportMIDIFileToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.exportMIDIFileToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.exportMIDIFileToolStripMenuItem.Text = "Export MIDI file...";
             this.exportMIDIFileToolStripMenuItem.Click += new System.EventHandler(this.exportMIDIFileToolStripMenuItem_Click);
             // 
@@ -155,13 +164,13 @@
             // chordToolStripMenuItem
             // 
             this.chordToolStripMenuItem.Name = "chordToolStripMenuItem";
-            this.chordToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.chordToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.chordToolStripMenuItem.Text = "Chord...";
             // 
             // instrumentToolStripMenuItem
             // 
             this.instrumentToolStripMenuItem.Name = "instrumentToolStripMenuItem";
-            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.instrumentToolStripMenuItem.Text = "Instrument...";
             // 
             // songToolStripMenuItem
@@ -175,54 +184,57 @@
             this.toolStripMenuItem4,
             this.setBeatsPerMinuteToolStripMenuItem});
             this.songToolStripMenuItem.Name = "songToolStripMenuItem";
-            this.songToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.songToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.songToolStripMenuItem.Text = "Song";
             // 
             // playToolStripMenuItem
             // 
+            this.playToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Play;
             this.playToolStripMenuItem.Name = "playToolStripMenuItem";
             this.playToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Space)));
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.playToolStripMenuItem.Text = "Play";
             this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
             // 
             // pauseToolStripMenuItem
             // 
+            this.pauseToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Pause;
             this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
             this.pauseToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.pauseToolStripMenuItem.Text = "Pause";
             this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
             // 
             // stopToolStripMenuItem
             // 
+            this.stopToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Stop;
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
             this.stopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(188, 6);
             // 
             // soundOffToolStripMenuItem
             // 
             this.soundOffToolStripMenuItem.Name = "soundOffToolStripMenuItem";
-            this.soundOffToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.soundOffToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.soundOffToolStripMenuItem.Text = "Sound off!";
             this.soundOffToolStripMenuItem.Click += new System.EventHandler(this.soundOffToolStripMenuItem_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(188, 6);
             // 
             // setBeatsPerMinuteToolStripMenuItem
             // 
             this.setBeatsPerMinuteToolStripMenuItem.Name = "setBeatsPerMinuteToolStripMenuItem";
-            this.setBeatsPerMinuteToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.setBeatsPerMinuteToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.setBeatsPerMinuteToolStripMenuItem.Text = "Set beats per minute...";
             this.setBeatsPerMinuteToolStripMenuItem.Click += new System.EventHandler(this.setBeatsPerMinuteToolStripMenuItem_Click);
             // 
@@ -234,33 +246,33 @@
             this.mIDIChannelsToolStripMenuItem,
             this.metronomeToolStripMenuItem});
             this.midiToolStripMenuItem.Name = "midiToolStripMenuItem";
-            this.midiToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.midiToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.midiToolStripMenuItem.Text = "Midi";
             // 
             // selectMIDIOutputDeviceToolStripMenuItem
             // 
             this.selectMIDIOutputDeviceToolStripMenuItem.Name = "selectMIDIOutputDeviceToolStripMenuItem";
-            this.selectMIDIOutputDeviceToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.selectMIDIOutputDeviceToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
             this.selectMIDIOutputDeviceToolStripMenuItem.Text = "Select MIDI output device...";
             this.selectMIDIOutputDeviceToolStripMenuItem.Click += new System.EventHandler(this.selectMIDIOutputDeviceToolStripMenuItem_Click);
             // 
             // setDefaultInstrumentToolStripMenuItem1
             // 
             this.setDefaultInstrumentToolStripMenuItem1.Name = "setDefaultInstrumentToolStripMenuItem1";
-            this.setDefaultInstrumentToolStripMenuItem1.Size = new System.Drawing.Size(221, 22);
+            this.setDefaultInstrumentToolStripMenuItem1.Size = new System.Drawing.Size(218, 22);
             this.setDefaultInstrumentToolStripMenuItem1.Text = "Select instrument...";
             this.setDefaultInstrumentToolStripMenuItem1.Click += new System.EventHandler(this.setDefaultInstrumentToolStripMenuItem1_Click);
             // 
             // mIDIChannelsToolStripMenuItem
             // 
             this.mIDIChannelsToolStripMenuItem.Name = "mIDIChannelsToolStripMenuItem";
-            this.mIDIChannelsToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.mIDIChannelsToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
             this.mIDIChannelsToolStripMenuItem.Text = "MIDI channels...";
             // 
             // metronomeToolStripMenuItem
             // 
             this.metronomeToolStripMenuItem.Name = "metronomeToolStripMenuItem";
-            this.metronomeToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.metronomeToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
             this.metronomeToolStripMenuItem.Text = "Metronome...";
             // 
             // helpToolStripMenuItem
@@ -272,7 +284,7 @@
             this.debugLoggingToolStripMenuItem,
             this.debugSongToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // manualToolStripMenuItem
@@ -310,14 +322,15 @@
             // 
             this._statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._toolStripStatusPlaying,
-            this._StatusLabelInstrument,
-            this._statusLabelBpm,
+            this._statusChord,
             this._statusBeatIndex,
+            this._statusLabelBpm,
+            this._StatusLabelInstrument,
             this._statusMidiDevice});
-            this._statusStrip.Location = new System.Drawing.Point(0, 251);
+            this._statusStrip.Location = new System.Drawing.Point(0, 265);
             this._statusStrip.Name = "_statusStrip";
             this._statusStrip.ShowItemToolTips = true;
-            this._statusStrip.Size = new System.Drawing.Size(337, 22);
+            this._statusStrip.Size = new System.Drawing.Size(376, 24);
             this._statusStrip.SizingGrip = false;
             this._statusStrip.TabIndex = 2;
             this._statusStrip.Text = "statusStrip1";
@@ -325,74 +338,210 @@
             // _toolStripStatusPlaying
             // 
             this._toolStripStatusPlaying.AutoSize = false;
-            this._toolStripStatusPlaying.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._toolStripStatusPlaying.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this._toolStripStatusPlaying.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
             this._toolStripStatusPlaying.Name = "_toolStripStatusPlaying";
-            this._toolStripStatusPlaying.Size = new System.Drawing.Size(60, 17);
+            this._toolStripStatusPlaying.Size = new System.Drawing.Size(60, 19);
             this._toolStripStatusPlaying.Text = "-";
             // 
-            // _StatusLabelInstrument
+            // _statusChord
             // 
-            this._StatusLabelInstrument.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this._StatusLabelInstrument.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this._StatusLabelInstrument.Name = "_StatusLabelInstrument";
-            this._StatusLabelInstrument.Size = new System.Drawing.Size(113, 17);
-            this._StatusLabelInstrument.Text = "toolStripStatusLabel1";
-            // 
-            // _statusLabelBpm
-            // 
-            this._statusLabelBpm.AutoSize = false;
-            this._statusLabelBpm.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this._statusLabelBpm.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this._statusLabelBpm.Name = "_statusLabelBpm";
-            this._statusLabelBpm.Size = new System.Drawing.Size(50, 17);
-            this._statusLabelBpm.Text = "toolStripStatusLabel1";
-            // 
-            // _statusMidiDevice
-            // 
-            this._statusMidiDevice.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this._statusMidiDevice.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this._statusMidiDevice.Name = "_statusMidiDevice";
-            this._statusMidiDevice.Size = new System.Drawing.Size(58, 17);
-            this._statusMidiDevice.Text = "No device";
-            // 
-            // _textBox
-            // 
-            this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._textBox.Location = new System.Drawing.Point(0, 27);
-            this._textBox.Multiline = true;
-            this._textBox.Name = "_textBox";
-            this._textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._textBox.Size = new System.Drawing.Size(337, 221);
-            this._textBox.TabIndex = 4;
-            this._textBox.TextChanged += new System.EventHandler(this._textBox_TextChanged);
+            this._statusChord.AutoSize = false;
+            this._statusChord.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._statusChord.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this._statusChord.Name = "_statusChord";
+            this._statusChord.Size = new System.Drawing.Size(32, 19);
             // 
             // _statusBeatIndex
             // 
             this._statusBeatIndex.AutoSize = false;
-            this._statusBeatIndex.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._statusBeatIndex.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this._statusBeatIndex.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this._statusBeatIndex.Name = "_statusBeatIndex";
-            this._statusBeatIndex.Size = new System.Drawing.Size(36, 17);
+            this._statusBeatIndex.Size = new System.Drawing.Size(36, 19);
             this._statusBeatIndex.Text = "../..";
+            // 
+            // _statusLabelBpm
+            // 
+            this._statusLabelBpm.AutoSize = false;
+            this._statusLabelBpm.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._statusLabelBpm.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this._statusLabelBpm.Name = "_statusLabelBpm";
+            this._statusLabelBpm.Size = new System.Drawing.Size(50, 19);
+            this._statusLabelBpm.Text = "toolStripStatusLabel1";
+            // 
+            // _StatusLabelInstrument
+            // 
+            this._StatusLabelInstrument.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._StatusLabelInstrument.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this._StatusLabelInstrument.Name = "_StatusLabelInstrument";
+            this._StatusLabelInstrument.Size = new System.Drawing.Size(122, 19);
+            this._StatusLabelInstrument.Text = "toolStripStatusLabel1";
+            // 
+            // _statusMidiDevice
+            // 
+            this._statusMidiDevice.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._statusMidiDevice.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this._statusMidiDevice.Name = "_statusMidiDevice";
+            this._statusMidiDevice.Size = new System.Drawing.Size(64, 19);
+            this._statusMidiDevice.Text = "No device";
+            // 
+            // _textBox
+            // 
+            this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._textBox.Location = new System.Drawing.Point(0, 52);
+            this._textBox.Multiline = true;
+            this._textBox.Name = "_textBox";
+            this._textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this._textBox.Size = new System.Drawing.Size(376, 212);
+            this._textBox.TabIndex = 4;
+            this._textBox.TextChanged += new System.EventHandler(this._textBox_TextChanged);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonNew,
+            this.toolStripButtonOpen,
+            this.toolStripButton3,
+            this.toolStripSeparator1,
+            this.toolStripButton4,
+            this.toolStripButton5,
+            this.toolStripSeparator2,
+            this.toolStripButtonPlay,
+            this.toolStripButtonPause,
+            this.toolStripButtonStop});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(376, 25);
+            this.toolStrip1.TabIndex = 5;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonNew
+            // 
+            this.toolStripButtonNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonNew.Image = global::MidiChord.Properties.Resources.NewDocument;
+            this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonNew.Name = "toolStripButtonNew";
+            this.toolStripButtonNew.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonNew.Text = "New file";
+            this.toolStripButtonNew.ToolTipText = "New file";
+            this.toolStripButtonNew.Click += new System.EventHandler(this.toolStripButtonNew_Click);
+            // 
+            // toolStripButtonOpen
+            // 
+            this.toolStripButtonOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonOpen.Image = global::MidiChord.Properties.Resources.OpenFile;
+            this.toolStripButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonOpen.Name = "toolStripButtonOpen";
+            this.toolStripButtonOpen.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonOpen.Text = "Open file";
+            this.toolStripButtonOpen.Click += new System.EventHandler(this.toolStripButtonOpen_Click);
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton3.Image = global::MidiChord.Properties.Resources.Save;
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton3.Text = "Save";
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
+            // 
+            // toolStripButton4
+            // 
+            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
+            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton4.Name = "toolStripButton4";
+            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton4.Text = "toolStripButton4";
+            // 
+            // toolStripButton5
+            // 
+            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
+            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton5.Name = "toolStripButton5";
+            this.toolStripButton5.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton5.Text = "toolStripButton5";
+            // 
+            // toolStripButtonPlay
+            // 
+            this.toolStripButtonPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPlay.Image = global::MidiChord.Properties.Resources.Play;
+            this.toolStripButtonPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPlay.Name = "toolStripButtonPlay";
+            this.toolStripButtonPlay.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPlay.Text = "Play";
+            this.toolStripButtonPlay.Click += new System.EventHandler(this.toolStripButtonPlay_Click);
+            // 
+            // toolStripButtonPause
+            // 
+            this.toolStripButtonPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPause.Image = global::MidiChord.Properties.Resources.Pause;
+            this.toolStripButtonPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPause.Name = "toolStripButtonPause";
+            this.toolStripButtonPause.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPause.Text = "Pause";
+            this.toolStripButtonPause.ToolTipText = "Pause";
+            this.toolStripButtonPause.Click += new System.EventHandler(this.toolStripButtonPause_Click);
+            // 
+            // toolStripButtonStop
+            // 
+            this.toolStripButtonStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonStop.Image = global::MidiChord.Properties.Resources.Stop;
+            this.toolStripButtonStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonStop.Name = "toolStripButtonStop";
+            this.toolStripButtonStop.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonStop.Text = "Stop";
+            this.toolStripButtonStop.Click += new System.EventHandler(this.toolStripButtonStop_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Image = global::MidiChord.Properties.Resources.OpenFile;
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.openToolStripMenuItem.Text = "Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Save;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // FormMidiChord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(337, 273);
+            this.ClientSize = new System.Drawing.Size(376, 289);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this._textBox);
             this.Controls.Add(this._statusStrip);
             this.Controls.Add(this.menuStrip1);
@@ -405,6 +554,8 @@
             this.menuStrip1.PerformLayout();
             this._statusStrip.ResumeLayout(false);
             this._statusStrip.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -450,6 +601,19 @@
         private System.Windows.Forms.ToolStripMenuItem debugLoggingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem debugSongToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel _statusBeatIndex;
+        private System.Windows.Forms.ToolStripMenuItem recentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel _statusChord;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonNew;
+        private System.Windows.Forms.ToolStripButton toolStripButtonOpen;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripButton4;
+        private System.Windows.Forms.ToolStripButton toolStripButton5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPlay;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPause;
+        private System.Windows.Forms.ToolStripButton toolStripButtonStop;
     }
 }
 

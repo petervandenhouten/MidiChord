@@ -66,6 +66,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -78,9 +79,11 @@
     <Compile Include="BeatDialog.designer.cs">
       <DependentUpon>BeatDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChordLineDetector.cs" />
     <Compile Include="ChordLivePlayer.cs" />
     <Compile Include="ChordParser.cs" />
     <Compile Include="ChordPlayer.cs" />
+    <Compile Include="ChordProConverter.cs" />
     <Compile Include="ChordToMidiConvertor.cs" />
     <Compile Include="FormMidiChord.cs">
       <SubType>Form</SubType>
@@ -97,6 +100,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongChord.cs" />
+    <Compile Include="StringListDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StringListDialog.Designer.cs">
+      <DependentUpon>StringListDialog.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="BeatDialog.resx">
       <DependentUpon>BeatDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -116,6 +125,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="StringListDialog.resx">
+      <DependentUpon>StringListDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -132,6 +144,12 @@
     <Content Include="Chords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\NewDocument.png" />
+    <None Include="Resources\Play.png" />
+    <None Include="Resources\Pause.png" />
+    <None Include="Resources\Stop.png" />
+    <None Include="Resources\OpenFile.png" />
+    <None Include="Resources\Save.png" />
     <EmbeddedResource Include="HelpTextFile.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

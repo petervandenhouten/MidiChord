@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Sanford.Multimedia.Timers;
 using Sanford.Multimedia.Midi;
+using System.Windows.Forms;
 
 namespace MidiChord
 {
@@ -11,7 +12,7 @@ namespace MidiChord
     {
         private System.Windows.Forms.Timer _playbackTimer = new System.Windows.Forms.Timer();
         private OutputDevice _midiOutputDevice;
-        private int _countDown = 4;
+        private int _countDown = 0;
 
 
 
@@ -23,7 +24,7 @@ namespace MidiChord
 
         }
 
-        public delegate void delegateBeatTick(int beat, int maxBeat, int position);
+        public delegate void delegateBeatTick(int beat, int maxBeat, int position, string currentChord);
         public event delegateBeatTick BeatTick;
 
         public event Action SongEnded;
@@ -100,7 +101,7 @@ namespace MidiChord
             // Notify client
             if (BeatTick != null)
             {
-                BeatTick( -_countDown, _lastBeatIndex, parserPosition);
+                BeatTick( -_countDown, _lastBeatIndex, parserPosition, "");
             }
             _countDown--;
         }
@@ -113,6 +114,14 @@ namespace MidiChord
             foreach( var entry in _data)
             {
                 MidiChord midiChord = GetMidiChord(entry.Data);
+
+                if (midiChord == null)
+                {
+                    Stop();
+                    if (SongEnded != null) SongEnded();
+                    MessageBox.Show("Unknown chord: '" + entry.Data + "'");
+                    return;
+                }
 
                 if (entry.BeatIndex == _beatIndex)
                 {
@@ -149,7 +158,8 @@ namespace MidiChord
             // Notify client
             if (BeatTick != null)
             {
-                BeatTick(_beatIndex, _lastBeatIndex, parserPosition);
+                string chordname = _lastMidiChord != null ? _lastMidiChord.Name : "";
+                BeatTick(_beatIndex, _lastBeatIndex, parserPosition, chordname);
             }
 
             base._beatIndex++;
@@ -174,7 +184,7 @@ namespace MidiChord
         public void Start()
         {
             Reset();
-            _countDown = 4;
+            _countDown = 0; // make option
             SetMidiInstrument();
             _playbackTimer.Interval = base.GetBeatTimeInMs(BeatsPerMinute);
             _playbackTimer.Start();

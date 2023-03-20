@@ -1,31 +1,59 @@
 ﻿Formatting
 ----------
 
-All bars are 4/4: Each bar contains 4 quarter notes. 
-A queater note is one beat, so a bar contains also 4 beats.
+All measures are 4/4: Each measures contains 4 quarter notes. 
+A quarter note is one beat, so a measure contains also 4 beats.
 Other timings are not supported.
 
-C = 1 bar with C chord.
-C C = 2 bars with two times a C chord.
-C * = 2 bars with one time a C chord that is sustained into the second bar.
-
-C G Am F = 4 bars; 1st bar C chord, 2nd bar G chord, 3rd bar Am chord, 4rd bar F chord
+C = 1 measure with C chord of a whole note.
+C C = 2 measures with two times a C chord.
+C * = 2 measures with one time a C chord that is sustained into the second measure.
+C G Am F = 4 measures; 1st measure C chord, 2nd measure G chord, 3rd measure Am chord, 4rd measure F chord.
 
 [C] = 1 beat with C chord.
 [C G] = 2 beats with C on 1st beat and G chord on 2nd beat
 [C * G] = 3 beats with C chord on 1st beat, no chords on second beat, and G chord on 3rd beat.
-[C G Am * ] = 1 bar (of 4 beats) with chords on first three beats. No chord on 4th beat.
-[C G Am F] = 1 bar with 4 different chords on every beat.
-[* * * C] = 1 bar with no chord on first three beats, and a C chord on the 4th beat
+[C G Am * ] = 1 measure (of 4 beats) with chords on first three beats. No chord on 4th beat.
+[C G Am F] = 1 measure with 4 different chords on every beat.
+[* * * C] = 1 measure with no chord on first three beats, and a C chord on the 4th beat.
 
 (label) = a label used to indicate verses, chorus, breaks etc..
+-(label) = disable this part
 
-# song text = A line of the song text
+# Line with comment song text = A line of the song text.
 
 / = start of comment
 / = end of comment
 
-{instrument} = an instrument change
+{title: name of the song}
+{instrument: X} = an instrument change
+{tempo: X} = beats per minute if number
+{transpose: +/- X}
+
+{drum: A T C B} Set drum pattern for next measures with 4 quarter notes
+{drum: A h T H C h B H} Set drum pattern for next measures with 8 eighth notes
+
+(save in midi as other channel?)
+
+{repeat: X}
+{repeat: 3* X}
+{to: X}
+
+* label = repeat a part idendified by the label.
+*3 label = repeat a part 3 times, the part is idendified by the label.
+^ label = jump to label
 
 Future extensions:
-jumpto label = jumps towards a label.
+counter
+
+App:
+save default configuration instrument/bpm
+transpose?
+drum machine?
+
+
+Chords
+
+C D E F 
+Do Re Me
+I II IV (depends on key, default is C)

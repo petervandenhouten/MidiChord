@@ -1,11 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
-using System.Threading;
 
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.UI;
@@ -15,7 +11,6 @@ namespace MidiChord
     public partial class FormMidiChord : Form
     {
         private const string AppName = @"MIDI Chord - ";
-        private ChordParser _chordPlayer;
 
         private int _beatsPerMinute;
         private string _filename;
@@ -29,6 +24,8 @@ namespace MidiChord
 
         private bool _playing = false;
 
+        private Queue<string> MRUlist = new Queue<string>();
+
         public FormMidiChord()
         {
             InitializeComponent();
@@ -37,30 +34,16 @@ namespace MidiChord
             CreateChordNotes();
 
             // Midi sequence generator
-            _chordPlayer = new ChordParser(_chordNotes);
             _midiLivePlayer = new ChordLivePlayer(_chordNotes);
             _midiLivePlayer.BeatTick += new ChordLivePlayer.delegateBeatTick(_midiLivePlayer_BeatTick);
             _midiLivePlayer.SongEnded += new Action(_midiLivePlayer_SongEnded);
 
+            // Default Settings
             SetMIDIDevice(0);
             SetBeatsPerMinute(120);
             SetInstrument(GeneralMidiInstrument.AcousticGrandPiano);
             SetMetronomeInstrument(GeneralMidiInstrument.TaikoDrum, GeneralMidiInstrument.Woodblock);
         }
-
-        void _midiLivePlayer_SongEnded()
-        {
-            _playing = false;
-            _toolStripStatusPlaying.Text = "Completed.";
-        }
-
-        void _midiLivePlayer_BeatTick(int beat, int max, int position)
-        {
-            // todo cursos in text @ position
-
-            _statusBeatIndex.Text = beat.ToString() + "/" + max.ToString();
-        }
-
         private void CreateChordNotes()
         {
             if (_chordNotes == null)
@@ -90,7 +73,7 @@ namespace MidiChord
                         string chordName = cleanLine.Split(':')[0];
                         string notes = cleanLine.Split(':')[1];
 
-                        string [] noteArray = notes.Split(',');
+                        string[] noteArray = notes.Split(',');
                         List<string> cleanNoteArray = new List<string>();
                         foreach (string str in noteArray)
                         {
@@ -108,92 +91,49 @@ namespace MidiChord
             }
         }
 
-        private void SetInstrument(GeneralMidiInstrument generalMidiInstrument)
+        #region Live Player Events
+
+        void _midiLivePlayer_SongEnded()
         {
-            _instrument = generalMidiInstrument;
-            _StatusLabelInstrument.Text = generalMidiInstrument.ToString();
+            _playing = false;
+            _toolStripStatusPlaying.Text = "Completed.";
         }
 
-        private void SetMetronomeInstrument(GeneralMidiInstrument instrument1, GeneralMidiInstrument instrument2)
+        void _midiLivePlayer_BeatTick(int beat, int max, int position, string currentChord)
         {
-            _metronomeInstrument1 = instrument1;
-            _metronomeInstrument2 = instrument2;
+            // todo cursos in text @ position
+            int measure = (beat / 4) + 1;
+            int beat_in_measure = (beat % 4) + 1;
+
+            _statusBeatIndex.Text = measure.ToString() + "." + beat_in_measure.ToString();
+            _statusChord.Text = currentChord;
         }
 
-        private void SetBeatsPerMinute(int bpm)
-        {
-            _beatsPerMinute = bpm;
-            _statusLabelBpm.Text = _beatsPerMinute.ToString() + " bpm";
-        }
+        #endregion
 
-        void _sequencer_ChannelMessagePlayed(object sender, ChannelMessageEventArgs e)
-        {
-            // actually send the midi data
-            //_midiOutputDevice.Send(e.Message);
-
-            //context.post(delegate(object dummy)
-            //{
-            //    string txt = e.message.command.tostring() + '\t' + '\t' +
-            //                e.message.midichannel.tostring() + '\t' +
-            //                e.message.data1.tostring() + '\t' +
-            //                e.message.data2.tostring();
-
-            //    _statuslabelchannelmessage.text = txt;
-            //}, null);
-
-        }
-
-
-        private void SetMIDIDevice(int deviceID)
-        {
-            try
-            {
-                _midiLivePlayer.MidiOutputDeviceID = deviceID;
-                _statusMidiDevice.Text = OutputDevice.GetDeviceCapabilities(deviceID).name;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void playToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!_playing)
-            {
-                ChordParser parser = new ChordParser( _chordNotes );
-                List<SongItem> song = parser.ParseText(_textBox.Text);
-
-                _midiLivePlayer.BeatsPerMinute                  = _beatsPerMinute;
-                _midiLivePlayer.SongInstrument                  = _instrument;
-                _midiLivePlayer.MetronomeFirstBeatInstrument    = _metronomeInstrument1;
-                _midiLivePlayer.MetronomeInstrument             = _metronomeInstrument2;
-
-                _midiLivePlayer.SetSong(song);
-
-                _midiLivePlayer.Start();
-
-                EnterPlayingMode();
-            }
-        }
-
+        #region Playback
         private void EnterPlayingMode()
         {
             _toolStripStatusPlaying.Text = "Playing";
             _playing = true;
         }
 
-        private void selectMIDIOutputDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LeavePlayingMode(bool pauze = false)
         {
-            OutputDeviceDialog dlg = new OutputDeviceDialog();
-            dlg.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            _playing = false;
+            if (pauze)
             {
-                SetMIDIDevice(dlg.OutputDeviceID);
+                _toolStripStatusPlaying.Text = "Paused";
             }
-
+            else
+            {
+                _toolStripStatusPlaying.Text = "Stopped";
+            }
+            _midiLivePlayer.Mute();
         }
+        #endregion
+
+        #region Form events
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -207,14 +147,225 @@ namespace MidiChord
             }
         }
 
+
+        private void _textBox_TextChanged(object sender, EventArgs e)
+        {
+            _saved = false;
+        }
+
+        private void FormMidiChord_Load(object sender, EventArgs e)
+        {
+            LoadRecentList();
+
+            foreach (string item in MRUlist)
+            {
+                ToolStripMenuItem fileRecent = new ToolStripMenuItem(item,
+                   null, new EventHandler(this.OnRecentFileClicked));
+
+                recentToolStripMenuItem.DropDownItems.Add(fileRecent);
+            }
+
+#if (DEBUG)
+            const string default_file = @"test.txt";
+            if (File.Exists(default_file))
+            {
+                LoadText(default_file);
+            }
+#endif
+        }
+
+        #endregion
+
+        #region Menu items
+
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog dlg = new SaveFileDialog();
+            SaveAsFile();
+        }
+
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Pause();
+        }
+
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Stop();
+        }
+
+        private void soundOffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _midiLivePlayer.Mute();
+        }
+
+        private void setDefaultInstrumentToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ChangeInstrument();
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NewFile();
+        }
+
+        private void setBeatsPerMinuteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeBeatsPerMinute();
+        }
+
+        private void debugLoggingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChordParser parser = new ChordParser(_chordNotes);
+            parser.ParseText(_textBox.Lines);
+
+            var dlg = new StringListDialog("Logging");
+            dlg.SetText(parser.Logging);
+            dlg.ShowDialog();
+        }
+
+        private void exportMIDIFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChordParser parser = new ChordParser(_chordNotes);
+            List<SongItem> song = parser.ParseText(_textBox.Lines);
+
+            // convert to track/sequence
+            ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordNotes);
+            midiConverter.SetSong(song);
+
+            midiConverter.BeatsPerMinute = _beatsPerMinute;
+            midiConverter.SongInstrument = _instrument;
+            midiConverter.MetronomeFirstBeatInstrument = _metronomeInstrument1;
+            midiConverter.MetronomeInstrument = _metronomeInstrument2;
+
+            // save sequence
+            midiConverter.Save("test.mid");
+        }
+
+        private void debugSongToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var list = new List<string>();
+
+            ChordParser parser = new ChordParser(_chordNotes);
+            List<SongItem> song = parser.ParseText(_textBox.Lines);
+
+            foreach (var songchord in song)
+            {
+                list.Add(songchord.ToString());
+            }
+
+            var dlg = new StringListDialog("Generated Chords");
+            dlg.SetText(list.ToArray());
+            dlg.ShowDialog();
+
+
+        }
+
+        private void selectMIDIOutputDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OutputDeviceDialog dlg = new OutputDeviceDialog();
+            dlg.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SaveText(dlg.FileName);
+                SetMIDIDevice(dlg.OutputDeviceID);
             }
         }
+
+        private void playToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Play();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFile();
+        }
+
+        #endregion
+
+        #region Toolbar buttons
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+        private void toolStripButtonNew_Click(object sender, EventArgs e)
+        {
+            NewFile();
+        }
+
+        private void toolStripButtonOpen_Click(object sender, EventArgs e)
+        {
+            OpenFile();
+        }
+
+        private void toolStripButtonPlay_Click(object sender, EventArgs e)
+        {
+            Play();
+        }
+
+        private void toolStripButtonPause_Click(object sender, EventArgs e)
+        {
+            Pause();
+        }
+        private void toolStripButtonStop_Click(object sender, EventArgs e)
+        {
+            Stop();
+        }
+        #endregion
+
+        #region Song playback
+
+        private void Play()
+        {
+            if (!_playing)
+            {
+                ChordParser parser = new ChordParser(_chordNotes);
+                List<SongItem> song = parser.ParseText(_textBox.Lines);
+
+                _midiLivePlayer.BeatsPerMinute = _beatsPerMinute;
+                _midiLivePlayer.SongInstrument = _instrument;
+                _midiLivePlayer.MetronomeFirstBeatInstrument = _metronomeInstrument1;
+                _midiLivePlayer.MetronomeInstrument = _metronomeInstrument2;
+
+                _midiLivePlayer.SetSong(song);
+
+                _midiLivePlayer.Start();
+
+                EnterPlayingMode();
+            }
+        }
+
+        private void Pause()
+        {
+            if (_playing)
+            {
+                _midiLivePlayer.Pauze();
+                LeavePlayingMode(true);
+            }
+            else
+            {
+                _midiLivePlayer.Continue();
+                EnterPlayingMode();
+            }
+        }
+
+        private void Stop()
+        {
+            _midiLivePlayer.Stop();
+            LeavePlayingMode();
+        }
+
+        #endregion
+
+        #region File Open/Save
 
         private bool SaveText(string filename)
         {
@@ -246,28 +397,6 @@ namespace MidiChord
             this.Text = AppName + Path.GetFileName(_filename);
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_filename == null)
-            {
-                saveAsToolStripMenuItem_Click(sender, e);
-            }
-            else
-            {
-                SaveText(_filename);
-            }
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dlg = new OpenFileDialog();
-
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                LoadText(dlg.FileName);
-            }
-        }
-
         private bool LoadText(string filename)
         {
             bool bstatus = true;
@@ -292,59 +421,8 @@ namespace MidiChord
             return bstatus;
         }
 
-        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_playing)
-            {
-                _midiLivePlayer.Stop();
-                LeavePlayingMode(true);
-            }
-            else
-            {
-                _midiLivePlayer.Continue();
-                EnterPlayingMode();
-            }
-        }
 
-        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _midiLivePlayer.Stop();
-            LeavePlayingMode();
-
-        }
-
-        private void LeavePlayingMode(bool pauze=false)
-        {
-            _playing = false;
-            if (pauze)
-            {
-                _toolStripStatusPlaying.Text = "Paused";
-            }
-            else
-            {
-                _toolStripStatusPlaying.Text = "Stopped";
-            }
-            _midiLivePlayer.Mute();
-        }
-
-        private void soundOffToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _midiLivePlayer.Mute();
-        }
-
-        private void setDefaultInstrumentToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            InstrumentDialog dlg = new InstrumentDialog();
-
-            dlg.Instrument = _instrument;
-
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                SetInstrument(dlg.Instrument);
-            }
-        }
-
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewFile()
         {
             if (!_saved)
             {
@@ -361,23 +439,108 @@ namespace MidiChord
             }
         }
 
-        private void _textBox_TextChanged(object sender, EventArgs e)
+        private void OpenFile()
         {
-            _saved = false;
-        }
+            OpenFileDialog dlg = new OpenFileDialog();
 
-        private void FormMidiChord_Load(object sender, EventArgs e)
-        {
-#if (DEBUG)
-            const string default_file = @"test.txt";
-            if (File.Exists(default_file))
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                LoadText(default_file);
+                LoadText(dlg.FileName);
+                SaveRecentFile(dlg.FileName);
             }
-#endif
+        }
+        private void SaveFile()
+        {
+            if (_filename == null)
+            {
+                SaveAsFile();
+            }
+            else
+            {
+                SaveText(_filename);
+            }
         }
 
-        private void setBeatsPerMinuteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveAsFile()
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SaveText(dlg.FileName);
+            }
+        }
+
+        #endregion
+
+        #region MRU
+        private void OnRecentFileClicked(object sender, EventArgs e)
+        {
+            string filepath = sender.ToString();
+            LoadText(filepath);
+        }
+        private void SaveRecentFile(string strPath)
+        {
+            recentToolStripMenuItem.DropDownItems.Clear();
+
+            LoadRecentList();
+
+            if (!(MRUlist.Contains(strPath)))
+
+                MRUlist.Enqueue(strPath);
+
+            while (MRUlist.Count > 5)
+
+                MRUlist.Dequeue();
+
+            foreach (string strItem in MRUlist)
+            {
+                ToolStripMenuItem tsRecent = new
+                   ToolStripMenuItem(strItem, null);
+
+                recentToolStripMenuItem.DropDownItems.Add(tsRecent);
+            }
+
+            StreamWriter stringToWrite = new
+               StreamWriter(System.Environment.CurrentDirectory +
+               @"\Recent.txt");
+
+            foreach (string item in MRUlist)
+
+                stringToWrite.WriteLine(item);
+
+            stringToWrite.Flush();
+
+            stringToWrite.Close();
+        }
+
+        private void LoadRecentList()
+        {
+            MRUlist.Clear();
+
+            string filepath = Environment.CurrentDirectory + @"\Recent.txt";
+
+            if (File.Exists(filepath)) 
+            {
+                StreamReader srStream = new StreamReader(filepath);
+                string strLine = "";
+                while ((InlineAssignHelper(ref strLine, srStream.ReadLine())) != null)
+                {
+                    MRUlist.Enqueue(strLine);
+                }
+                srStream.Close();
+            }
+        }
+
+        private static T InlineAssignHelper<T>(ref T target, T value)
+        {
+            target = value;
+            return value;
+        }
+        #endregion
+
+        #region Song settings
+
+        private void ChangeBeatsPerMinute()
         {
             BeatDialog dlg = new BeatDialog();
 
@@ -389,42 +552,49 @@ namespace MidiChord
             }
         }
 
-        private void debugLoggingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ChangeInstrument()
         {
-            MessageBox.Show(_chordPlayer.Logging);
-        }
+            InstrumentDialog dlg = new InstrumentDialog();
 
-        private void exportMIDIFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ChordParser parser = new ChordParser( _chordNotes );
-            List<SongItem> song = parser.ParseText(_textBox.Text);
+            dlg.Instrument = _instrument;
 
-            // convert to track/sequence
-            ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordNotes);
-            midiConverter.SetSong(song);
-
-            midiConverter.BeatsPerMinute               = _beatsPerMinute;
-            midiConverter.SongInstrument               = _instrument;
-            midiConverter.MetronomeFirstBeatInstrument = _metronomeInstrument1;
-            midiConverter.MetronomeInstrument          = _metronomeInstrument2;
-
-            // save sequence
-            midiConverter.Save("test.mid");
-        }
-
-        private void debugSongToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string txt = string.Empty;
-
-            ChordParser parser = new ChordParser( _chordNotes );
-            List<SongItem> song = parser.ParseText(_textBox.Text);
-
-            foreach (var songchord in song)
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                txt += songchord.ToString() + " ";
+                SetInstrument(dlg.Instrument);
             }
-
-            MessageBox.Show(txt);
         }
+
+        private void SetInstrument(GeneralMidiInstrument generalMidiInstrument)
+        {
+            _instrument = generalMidiInstrument;
+            _StatusLabelInstrument.Text = generalMidiInstrument.ToString();
+        }
+
+        private void SetMetronomeInstrument(GeneralMidiInstrument instrument1, GeneralMidiInstrument instrument2)
+        {
+            _metronomeInstrument1 = instrument1;
+            _metronomeInstrument2 = instrument2;
+        }
+
+        private void SetBeatsPerMinute(int bpm)
+        {
+            _beatsPerMinute = bpm;
+            _statusLabelBpm.Text = _beatsPerMinute.ToString() + " bpm";
+        }
+
+        private void SetMIDIDevice(int deviceID)
+        {
+            try
+            {
+                _midiLivePlayer.MidiOutputDeviceID = deviceID;
+                _statusMidiDevice.Text = OutputDevice.GetDeviceCapabilities(deviceID).name;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        #endregion
     }
 }

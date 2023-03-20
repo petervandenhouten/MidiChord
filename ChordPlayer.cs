@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using Sanford.Multimedia.Midi;
 
@@ -17,6 +18,7 @@ namespace MidiChord
 
         internal class MidiChord
         {
+            internal string Name;
             internal List<ChannelMessage> NotesOn = new List<ChannelMessage>();
             internal List<ChannelMessage> NotesOff = new List<ChannelMessage>();
         }
@@ -67,7 +69,7 @@ namespace MidiChord
             // create notes for metronome
             int metronomeVolume = 75;
             int metronomeNote = 60;
-            int metronomeDelay = 10;
+            //int metronomeDelay = 10;
 
             _metronomeFirstBeatInstrument = new ChannelMessageBuilder();
             _metronomeFirstBeatInstrument.Command = ChannelCommand.ProgramChange;
@@ -124,12 +126,13 @@ namespace MidiChord
                         builder.Build();
 
                         newChord.NotesOff.Add(builder.Result);
+                        newChord.Name = chord;
                     }
                 }
             }
             else
             {
-                throw (new Exception("Unknown chord: '" + chord + "'"));
+                return null;
             }
             return newChord;
         }
@@ -198,13 +201,13 @@ namespace MidiChord
 
             foreach (var entry in _data)
             {
-                if (entry.Timing == SongItem.SongItemType.BAR_CHORD)
+                if (entry.Type == SongItem.SongItemType.MEASURE_CHORD)
                 {
                     max = Math.Max(max, entry.BeatIndex + 3);
                 }
                 else
                 {
-                    max = Math.Max(max, entry.BeatIndex);
+                    max = Math.Max(max, entry.BeatIndex + 1);
                 }
             }
 
