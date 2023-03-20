@@ -547,7 +547,7 @@ namespace MidiChord
         private ParserCommand handleInstrument(string argument)
         {
             // if instrument is unknown then LOG ERROR, and not set the string
-            _instrument = argument;
+            //_instrument = argument;
 
             Log("Instrument:", argument);
             return ParserCommand.INSTRUMENT;

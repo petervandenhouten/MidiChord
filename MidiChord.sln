@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidiChord", "MidiChord.csproj", "{A1F28002-F0E4-4E17-86ED-45552E69EFF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestMidiChord", "..\UnitTestMidiChord\UnitTestMidiChord.csproj", "{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestMidiChord", "UnitTestMidiChord\UnitTestMidiChord.csproj", "{32F749D7-9C4C-41C1-97C2-919C334D0D68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +23,14 @@ Global
 		{A1F28002-F0E4-4E17-86ED-45552E69EFF0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A1F28002-F0E4-4E17-86ED-45552E69EFF0}.Release|x86.ActiveCfg = Release|x86
 		{A1F28002-F0E4-4E17-86ED-45552E69EFF0}.Release|x86.Build.0 = Release|x86
-		{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}.Debug|x86.Build.0 = Debug|Any CPU
-		{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}.Release|x86.ActiveCfg = Release|Any CPU
-		{DA2F2456-5B69-46F5-B1EE-FA1827B804EC}.Release|x86.Build.0 = Release|Any CPU
+		{32F749D7-9C4C-41C1-97C2-919C334D0D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32F749D7-9C4C-41C1-97C2-919C334D0D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32F749D7-9C4C-41C1-97C2-919C334D0D68}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{32F749D7-9C4C-41C1-97C2-919C334D0D68}.Debug|x86.Build.0 = Debug|Any CPU
+		{32F749D7-9C4C-41C1-97C2-919C334D0D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32F749D7-9C4C-41C1-97C2-919C334D0D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32F749D7-9C4C-41C1-97C2-919C334D0D68}.Release|x86.ActiveCfg = Release|Any CPU
+		{32F749D7-9C4C-41C1-97C2-919C334D0D68}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
