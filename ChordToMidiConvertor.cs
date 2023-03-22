@@ -12,7 +12,7 @@ namespace MidiChord
     {
         private Sanford.Multimedia.Midi.Sequence _sequence;
 
-        public ChordToMidiConvertor(Dictionary<string, string[]> chordNotes)
+        public ChordToMidiConvertor(ChordList chordNotes)
             : base(chordNotes)
         {
         }

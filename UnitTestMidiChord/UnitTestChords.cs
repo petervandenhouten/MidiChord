@@ -15,10 +15,12 @@ namespace UnitTestMidiChord
             parser.ParseText(new string[] { "C D F G" });
             Assert.AreEqual(4, parser.MeasureCount);
             Assert.AreEqual(16, parser.BeatCount);
+            Assert.AreEqual(4, parser.GetNumberOfChords());
 
             parser.ParseText(new string[] { "C * F G" });
             Assert.AreEqual(4, parser.MeasureCount);
             Assert.AreEqual(16, parser.BeatCount);
+            Assert.AreEqual(3, parser.GetNumberOfChords());
         }
 
         [TestMethod]

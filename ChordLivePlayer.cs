@@ -16,7 +16,7 @@ namespace MidiChord
 
 
 
-        public ChordLivePlayer(Dictionary<string, string[]> chordNotes)
+        public ChordLivePlayer(ChordList chordNotes)
             : base(chordNotes)
         {
             _playbackTimer.Tick += new EventHandler(_playbackTimer_Tick);

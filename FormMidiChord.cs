@@ -20,7 +20,7 @@ namespace MidiChord
         private GeneralMidiInstrument _metronomeInstrument2;
 
         private ChordLivePlayer _midiLivePlayer;
-        private Dictionary<string, string[]> _chordNotes;
+        private ChordList _chordList;
 
         private bool _playing = false;
 
@@ -31,10 +31,10 @@ namespace MidiChord
             InitializeComponent();
 
             // Load choard
-            CreateChordNotes();
+            _chordList = new ChordList();
 
             // Midi sequence generator
-            _midiLivePlayer = new ChordLivePlayer(_chordNotes);
+            _midiLivePlayer = new ChordLivePlayer(_chordList);
             _midiLivePlayer.BeatTick += new ChordLivePlayer.delegateBeatTick(_midiLivePlayer_BeatTick);
             _midiLivePlayer.SongEnded += new Action(_midiLivePlayer_SongEnded);
 
@@ -43,52 +43,6 @@ namespace MidiChord
             SetBeatsPerMinute(120);
             SetInstrument(GeneralMidiInstrument.AcousticGrandPiano);
             SetMetronomeInstrument(GeneralMidiInstrument.TaikoDrum, GeneralMidiInstrument.Woodblock);
-        }
-        private void CreateChordNotes()
-        {
-            if (_chordNotes == null)
-            {
-                _chordNotes = new Dictionary<string, string[]>();
-            }
-            _chordNotes.Clear();
-
-            const string chordsFilename = @"chords.txt";
-            try
-            {
-                System.IO.TextReader readFile = new StreamReader(chordsFilename);
-                string txt = readFile.ReadToEnd();
-
-                readFile.Close();
-                readFile = null;
-
-                // parse chords
-                string[] lines = txt.Split('\n');
-
-                foreach (string line in lines)
-                {
-                    string cleanLine = line.Replace("\r", "").Replace("\n", "").Trim();
-
-                    if (!string.IsNullOrWhiteSpace(cleanLine))
-                    {
-                        string chordName = cleanLine.Split(':')[0];
-                        string notes = cleanLine.Split(':')[1];
-
-                        string[] noteArray = notes.Split(',');
-                        List<string> cleanNoteArray = new List<string>();
-                        foreach (string str in noteArray)
-                        {
-                            cleanNoteArray.Add(str.Replace('\r', ' ').Trim());
-                        }
-
-                        _chordNotes.Add(chordName, cleanNoteArray.ToArray());
-                    }
-                }
-
-            }
-            catch (IOException ex)
-            {
-                MessageBox.Show("Cannot read chords.txt file. " + ex.Message);
-            }
         }
 
         #region Live Player Events
@@ -215,7 +169,7 @@ namespace MidiChord
 
         private void debugLoggingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChordParser parser = new ChordParser(_chordNotes);
+            ChordParser parser = new ChordParser(_chordList);
             parser.ParseText(_textBox.Lines);
 
             var dlg = new StringListDialog("Logging");
@@ -225,11 +179,11 @@ namespace MidiChord
 
         private void exportMIDIFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChordParser parser = new ChordParser(_chordNotes);
+            ChordParser parser = new ChordParser(_chordList);
             List<SongItem> song = parser.ParseText(_textBox.Lines);
 
             // convert to track/sequence
-            ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordNotes);
+            ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordList);
             midiConverter.SetSong(song);
 
             midiConverter.BeatsPerMinute = _beatsPerMinute;
@@ -245,7 +199,7 @@ namespace MidiChord
         {
             var list = new List<string>();
 
-            ChordParser parser = new ChordParser(_chordNotes);
+            ChordParser parser = new ChordParser(_chordList);
             List<SongItem> song = parser.ParseText(_textBox.Lines);
 
             foreach (var songchord in song)
@@ -327,7 +281,7 @@ namespace MidiChord
         {
             if (!_playing)
             {
-                ChordParser parser = new ChordParser(_chordNotes);
+                ChordParser parser = new ChordParser(_chordList);
                 List<SongItem> song = parser.ParseText(_textBox.Lines);
 
                 _midiLivePlayer.BeatsPerMinute = _beatsPerMinute;

@@ -80,6 +80,7 @@
       <DependentUpon>BeatDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="ChordLineDetector.cs" />
+    <Compile Include="ChordList.cs" />
     <Compile Include="ChordLivePlayer.cs" />
     <Compile Include="ChordParser.cs" />
     <Compile Include="ChordPlayer.cs" />

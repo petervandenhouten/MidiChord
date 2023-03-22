@@ -28,17 +28,18 @@ namespace MidiChord
 
     public class ChordParser
     {
-        private enum ParserMode { CHORDS, COMMAND, LABEL, SONG_TEXT, COMMENT, DISABLE_PART };
+        private enum ParserLineMode { CHORDS_OR_TEXT, COMMAND, LABEL, COMMENT_LINE, DISABLE_PART };
         private enum ParserCommand { NONE, LABEL, INSTRUMENT, DRUM, TITLE, SUBTITLE, TEMPO, KEY, REPEAT, JUMP };
 
         private enum ParserDuration { WHOLE, HALF, QUARTER };
 
-        private enum ParserChordMode { MEASURE, BEAT };
+        private enum ParserChordMode { MEASURE, BEAT, COMMENT };
 
         private string _lastChord;
         private List<string> _logging;
         private int _beatIndex; // index of beat (position in song) during parsing
-        private ParserMode _parserMode;
+        private ParserLineMode _parserLineMode;
+        private ParserChordMode _parserChordMode;
         private List<LabelledPart> _labels;
 
         // Music data
@@ -47,7 +48,7 @@ namespace MidiChord
         private string _instrument;
 
         private List<SongItem> _parserOutput;
-        private readonly Dictionary<string, string[]> _refChordNotes;
+        private readonly ChordList _chordList;
         private MetaData _metaData;
 
         public string Instrument { get { return _instrument; } }
@@ -59,12 +60,12 @@ namespace MidiChord
 
         public ChordParser()
         {
-            _refChordNotes = getNotesOfChords();
+            _chordList = new ChordList();
         }
 
-        public ChordParser(Dictionary<string, string[]> chordNotes)
+        public ChordParser(ChordList chordNotes)
         {
-            _refChordNotes = chordNotes;
+            _chordList = chordNotes;
         }
 
         public int ParseErrorMessage { get; private set; }
@@ -253,13 +254,12 @@ namespace MidiChord
             if(_parserOutput == null) _parserOutput = new List<SongItem>();
             _parserOutput.Clear();
 
-
             if(_labels == null) _labels = new List<LabelledPart>();
             _labels.Clear();
 
             _metaData = new MetaData();
             _beatIndex = 0;
-            _parserMode = ParserMode.CHORDS;
+            _parserLineMode = ParserLineMode.CHORDS_OR_TEXT;
         }
 
         private void parseLine(int lineNumber, string txt)
@@ -271,29 +271,36 @@ namespace MidiChord
 
             string firstChar = txt.Substring(0, 1);
 
-            if (firstChar == "#")
+            if (firstChar.Equals(@"#"))
             {
-                _parserMode = ParserMode.COMMENT;
+                _parserLineMode = ParserLineMode.COMMENT_LINE;
             }
             else if (firstChar == "{")
             {
-                _parserCommand = parseCommand(txt);
+                if (_parserChordMode != ParserChordMode.COMMENT)
+                {
+                    _parserCommand = parseCommand(txt);
 
-                if (_parserCommand == ParserCommand.NONE)
-                {
-                    handleLabel(txt, lineNumber);
-                    _parserMode = ParserMode.LABEL;
-                }
-                else
-                {
-                    _parserMode = ParserMode.COMMAND;
+                    if (_parserCommand == ParserCommand.NONE)
+                    {
+                        handleLabel(txt, lineNumber);
+                        _parserLineMode = ParserLineMode.LABEL;
+
+                        // a label can be the end of a DISABLE_PART
+                    }
+                    else
+                    {
+                        _parserLineMode = ParserLineMode.COMMAND;
+                    }
                 }
             }
             else if (firstChar == "-")
             {
-                _parserMode = ParserMode.DISABLE_PART;
+                _parserLineMode = ParserLineMode.DISABLE_PART;
             }
-            else
+
+            // Handle chords in parser mode
+            if (_parserLineMode == ParserLineMode.CHORDS_OR_TEXT )
             {
                 // Chords of songtext
                 var chordLineDetector = new ChordLineDetector(txt);
@@ -305,8 +312,16 @@ namespace MidiChord
                 {
                     handleSongText(txt);
                 }
-
             }
+
+            // return to chord/text parsing
+            if (_parserLineMode == ParserLineMode.COMMENT_LINE ||
+                _parserLineMode == ParserLineMode.LABEL ||
+                _parserLineMode == ParserLineMode.COMMAND)
+            {
+                _parserLineMode = ParserLineMode.CHORDS_OR_TEXT;
+            }
+
             //while (pointer < txt.Length)
             //{
             //    chordFound = false;
@@ -417,8 +432,7 @@ namespace MidiChord
             int pointer = 0;
             int movepointer = 0;
             bool chordFound = false;
-            ParserChordMode chordMode = ParserChordMode.MEASURE;
-
+            
             while (pointer < txt.Length)
             {
                 chordFound = false;
@@ -426,31 +440,50 @@ namespace MidiChord
 
                 string firstChar = txt.Substring(pointer, 1);
 
-                if (firstChar.Equals(@"["))
+                if (_parserChordMode == ParserChordMode.COMMENT)
                 {
-                    chordMode = ParserChordMode.BEAT;
-                    movepointer = 1;
-                }
-                else if (firstChar.Equals(@"]"))
-                {
-                    chordMode = ParserChordMode.MEASURE;
-                    movepointer = 1;
-                }
-                else if (firstChar.Equals(@" "))
-                {
+                    if (firstChar.Equals(@"/"))
+                    {
+                        // Disable comment
+                        _parserChordMode = ParserChordMode.MEASURE;
+                    }
                     movepointer = 1;
                 }
                 else
                 {
-                    if (chordMode == ParserChordMode.MEASURE)
+                    if (firstChar.Equals(@"["))
                     {
-                        movepointer = handleMeasureChord(txt, pointer);
-                        chordFound = movepointer > 0;
+                        _parserChordMode = ParserChordMode.BEAT;
+                        movepointer = 1;
+                    }
+                    else if (firstChar.Equals(@"]"))
+                    {
+                        _parserChordMode = ParserChordMode.MEASURE;
+                        movepointer = 1;
+                    }
+                    else if (firstChar.Equals(@"/"))
+                    {
+                        // Enable comment
+                        Log("Comment part");
+                        _parserChordMode = ParserChordMode.COMMENT;
+                        movepointer = 1;
+                    }
+                    else if (firstChar.Equals(@" "))
+                    {
+                        movepointer = 1;
                     }
                     else
                     {
-                        movepointer = handleBeatChord(txt, pointer);
-                        chordFound = movepointer > 0;
+                        if (_parserChordMode == ParserChordMode.MEASURE)
+                        {
+                            movepointer = handleMeasureChord(txt, pointer);
+                            chordFound = movepointer > 0;
+                        }
+                        else if (_parserChordMode == ParserChordMode.BEAT)
+                        {
+                            movepointer = handleBeatChord(txt, pointer);
+                            chordFound = movepointer > 0;
+                        }
                     }
                 }
                 pointer += movepointer;
@@ -725,20 +758,20 @@ namespace MidiChord
             str = str + "     ";
 
             // find longest chord at start of string str
-            foreach (var pair in _refChordNotes)
+            foreach (var chord in _chordList.GetAllChords())
             {
-                if (str.Substring(0, pair.Key.Length).ToUpper().Equals(pair.Key.ToUpper()) &&
-                     pair.Key.Length > longestChordFound.Length)
+                if (str.Substring(0, chord.Length).ToUpper().Equals(chord.ToUpper()) &&
+                     chord.Length > longestChordFound.Length)
                 {
-                    longestChordFound = pair.Key;
+                    longestChordFound = chord;
                 }
             }
 
             chordName = longestChordFound;
 
-            if (_refChordNotes.ContainsKey(longestChordFound))
+            if (_chordList.ContainsChord(longestChordFound))
             {
-                return _refChordNotes[longestChordFound];
+                return _chordList.GetChord(longestChordFound);
             }
 
             return null;
@@ -903,47 +936,6 @@ namespace MidiChord
             Log(txt);
         }
 
-        private Dictionary<string, string[]> getNotesOfChords()
-        {
-            return new Dictionary<string, string[]>
-            {
-                ["A"] = new string[] { "A", "C#", "E" },
-                ["A7"] = new string[] { "A", "C#", "E", "G" },
-                ["Am"] = new string[] { "A", "C", "E" },
-                ["Am7"] = new string[] { "A", "C", "E", "G" },
-
-                ["A#"] = new string[] { "Bb", "D", "F" },
-                ["Bb"] = new string[] { "Bb", "D", "F" },
-
-                ["B"] = new string[] { "A", "D#", "F#" },
-
-                ["C"] = new string[] { "C", "E", "G" },
-
-                ["C#"] = new string[] { "Db", "F", "Ab" },
-                ["Db"] = new string[] { "Db", "F", "Ab" },
-
-                ["D"] = new string[] { "D", "F#", "A" },
-                ["D7"] = new string[] { "D", "F#", "A", "C" },
-
-                ["D#"] = new string[] { "Eb", "G", "Bb" },
-                ["Eb"] = new string[] { "Eb", "G", "Bb" },
-
-                ["E"] = new string[] { "E", "G#", "B" },
-                ["Em"] = new string[] { "E", "G", "B" },
-
-                ["F"] = new string[] { "F", "A", "C" },
-
-                ["F#"] = new string[] { "F#", "A#", "C#" },
-                ["Gb"] = new string[] { "F#", "A#", "C#" },
-
-                ["G"] = new string[] { "G", "B", "D" },
-
-                ["G#"] = new string[] { "Ab", "C", "Eb" },
-                ["Ab"] = new string[] { "Ab", "C", "Eb" },
-
-                ["Do"] = new string[] { "C", "E", "G" }
-            };
-        }
 
         public string[] Logging
         {

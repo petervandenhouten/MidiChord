@@ -14,7 +14,7 @@ namespace MidiChord
         protected int _lastBeatIndex = 0;
         internal MidiChord _lastMidiChord = null;
 
-        private readonly Dictionary<string, string[]> _refChordNotes;
+        private readonly ChordList _chordList;
 
         internal class MidiChord
         {
@@ -36,9 +36,9 @@ namespace MidiChord
         public int SongMidiChannel { get; set; }
         public bool EnableMetronome { get; set; }
 
-        public ChordPlayer(Dictionary<string, string[]> chordNotes)
+        public ChordPlayer(ChordList chordNotes)
         {
-            _refChordNotes = chordNotes;
+            _chordList = chordNotes;
 
             BeatsPerMinute = 60;
             SongInstrument = GeneralMidiInstrument.AcousticGrandPiano;
@@ -188,9 +188,9 @@ namespace MidiChord
 
         protected string[] GetNotesOfChord(string chord)
         {
-            if (_refChordNotes.ContainsKey(chord))
+            if (_chordList.ContainsChord(chord))
             {
-                return _refChordNotes[chord];
+                return _chordList.GetChord(chord);
             }
             return null;
         }

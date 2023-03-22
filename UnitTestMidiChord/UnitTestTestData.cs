@@ -27,5 +27,21 @@ namespace UnitTestMidiChord
             Assert.AreEqual(2, parser.GetNumberOfLabelledParts());
             Assert.AreEqual(10, parser.GetNumberOfChords());
         }
+
+        [TestMethod]
+        public void TestData_SongText_After_Chord()
+        {
+            var parser = new ChordParser();
+
+            string[] text =
+            {
+                "[D G C D] Hallo How are you?",
+            };
+
+            parser.ParseText(text);
+
+            Assert.AreEqual(4, parser.GetNumberOfChords());
+        }
+
     }
 }

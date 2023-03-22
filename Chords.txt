@@ -9,9 +9,12 @@ C:C,E,G
 C#:Db,F,Ab
 Db:Db,F,Ab
 D:D,F#,A
+Dsus2:D,E,A
+Dsus4:D,G,A
+Dsus:D,G,A
 D7:D,F#,A,C
 D#:Eb,G,Bb
-Eb#:Eb,G,Bb
+Eb:Eb,G,Bb
 E:E,G#,B
 Em:E,G,B
 F:F,A,C
@@ -20,5 +23,7 @@ Gb:F#,A#,C#
 G:G,B,D
 G#:Ab,C,Eb
 Ab:Ab,C,Eb
-
+Do:C,E,G
+Re:D,F#,A
+Mi:E,G#,B
 

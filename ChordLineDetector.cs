@@ -19,16 +19,35 @@ namespace MidiChord
             string[] words = line.Trim().Split(wordSeperators, StringSplitOptions.RemoveEmptyEntries);
             int maxLength = findMaxLengthOfWords(words);
 
+            // When all words are at maximum 2 characters long, then it is a chord line
             if (maxLength <= 2)
             {
                 return true;
             }
-            else if (maxLength <= 4)
+
+            int chordCount = 0;
+            int wordcount = words.Length;
+            var chordList = new ChordList();
+            foreach(var word in words)
             {
-                return true;
+                var possibleChord = word.Trim();
+
+                if (possibleChord.IndexOfAny( new char[] { '{', '}', '{', '}', '|', '/' }) >= 0 )
+                {
+                    wordcount--;
+                }
+
+                if (chordList.ContainsChord(possibleChord))
+                {
+                    chordCount++;
+                }
             }
 
             // Check in the words are (known) chords
+            if (chordCount > (wordcount* 0.8))
+            {
+                return true;
+            }
 
             return false;
         }

@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTestSongText.cs" />
     <Compile Include="UnitTestTestData.cs" />
     <Compile Include="UnitTestChordProConverter.cs" />
     <Compile Include="UnitTestChords.cs" />
