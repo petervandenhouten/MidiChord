@@ -5,6 +5,7 @@ using System.Text;
 using Sanford.Multimedia.Timers;
 using Sanford.Multimedia.Midi;
 using System.Windows.Forms;
+using Sanford.Multimedia;
 
 namespace MidiChord
 {
@@ -14,14 +15,10 @@ namespace MidiChord
         private OutputDevice _midiOutputDevice;
         private int _countDown = 0;
 
-
-
         public ChordLivePlayer(ChordList chordNotes)
             : base(chordNotes)
         {
             _playbackTimer.Tick += new EventHandler(_playbackTimer_Tick);
-
-
         }
 
         public delegate void delegateBeatTick(int beat, int maxBeat, int position, string currentChord);
@@ -214,8 +211,21 @@ namespace MidiChord
             _playbackTimer.Start();
         }
 
+        internal void PlayNote(GeneralMidiInstrument instrument)
+        {
+            var builder = new ChannelMessageBuilder();
+            builder.Command = ChannelCommand.NoteOn;
+            builder.MidiChannel = 0;
+            builder.Data1 = GetMidiData("C");
+            builder.Data2 = 127;
+            builder.Build();
 
+            if (_midiOutputDevice != null)
+            {
+                _midiOutputDevice.Send(GetMidiProgram(instrument));
+                _midiOutputDevice.Send(builder.Result);
+            }
 
-
+        }
     }
 }

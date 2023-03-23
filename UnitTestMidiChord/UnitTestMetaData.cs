@@ -17,7 +17,7 @@ namespace UnitTestMidiChord
                 "{title: Name Of the Song}"
             };
 
-            parser.ParseText(text);
+            parser.Parse(text);
 
             Assert.AreEqual("Name Of the Song", parser.Song.Title);
 
@@ -34,7 +34,7 @@ namespace UnitTestMidiChord
                 "C D F E"
             };
 
-            parser.ParseText(text);
+            parser.Parse(text);
 
             Assert.IsTrue( string.IsNullOrEmpty(parser.Song.Title));
 

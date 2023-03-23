@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Sanford.Multimedia.Midi;
-using System.IO;
-using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
-using System.Data.SqlTypes;
+using Sanford.Multimedia.Midi;
+//using System.IO;
+//using static System.Net.Mime.MediaTypeNames;
+//using System.Reflection;
+//using System.Data.SqlTypes;
 
 namespace MidiChord
 {
@@ -33,7 +33,7 @@ namespace MidiChord
 
         private enum ParserDuration { WHOLE, HALF, QUARTER };
 
-        private enum ParserChordMode { MEASURE, BEAT, COMMENT };
+        private enum ParserChordMode { MEASURE, BEAT, COMMENT, TEXT };
 
         private string _lastChord;
         private List<string> _logging;
@@ -45,13 +45,13 @@ namespace MidiChord
         // Music data
         private string _key;
         private int _tempo;
-        private string _instrument;
+        private GeneralMidiInstrument _instrument;
 
         private List<SongItem> _parserOutput;
         private readonly ChordList _chordList;
         private MetaData _metaData;
 
-        public string Instrument { get { return _instrument; } }
+        public string Instrument { get { return _instrument.ToString(); } }
         public string Key { get { return _key; } }
         public int Tempo { get { return _tempo; } }
         public int BeatCount { get { return _beatIndex; } }
@@ -229,7 +229,7 @@ namespace MidiChord
         }
          * ****/
 
-        public List<SongItem> ParseText(string[] lines)
+        public List<SongItem> Parse(string[] lines)
         {
             initializeParser();
 
@@ -310,7 +310,7 @@ namespace MidiChord
                 }
                 else
                 {
-                    handleSongText(txt);
+                    parseSongText(txt);
                 }
             }
 
@@ -432,7 +432,12 @@ namespace MidiChord
             int pointer = 0;
             int movepointer = 0;
             bool chordFound = false;
-            
+
+            if (_parserChordMode != ParserChordMode.COMMENT)
+            {
+                _parserChordMode = ParserChordMode.MEASURE;
+            }
+
             while (pointer < txt.Length)
             {
                 chordFound = false;
@@ -451,15 +456,18 @@ namespace MidiChord
                 }
                 else
                 {
-                    if (firstChar.Equals(@"["))
+                    if (firstChar.Equals(@"|"))
                     {
-                        _parserChordMode = ParserChordMode.BEAT;
-                        movepointer = 1;
-                    }
-                    else if (firstChar.Equals(@"]"))
-                    {
-                        _parserChordMode = ParserChordMode.MEASURE;
-                        movepointer = 1;
+                        if (_parserChordMode == ParserChordMode.MEASURE)
+                        {
+                            _parserChordMode = ParserChordMode.BEAT;
+                            movepointer = 1;
+                        }
+                        else
+                        {
+                            _parserChordMode = ParserChordMode.MEASURE;
+                            movepointer = 1;
+                        }
                     }
                     else if (firstChar.Equals(@"/"))
                     {
@@ -594,10 +602,24 @@ namespace MidiChord
 
         private ParserCommand handleInstrument(string argument)
         {
-            // if instrument is unknown then LOG ERROR, and not set the string
-            //_instrument = argument;
+            foreach (GeneralMidiInstrument instrument in Enum.GetValues(typeof(GeneralMidiInstrument)))
+            {
+                if (argument.Equals(instrument.ToString()))
+                {
+                    _instrument = instrument;
 
-            Log("Instrument:", argument);
+                    SongItem c = new SongItem
+                    {
+                        Type = SongItem.SongItemType.CHANGE_INSTRUMENT,
+                        BeatIndex = _beatIndex,
+                        Instrument = instrument,
+                        ParserPosition = 0 // Not used anymore
+                    };
+                    _parserOutput.Add(c);
+                    Log("Instrument:", argument);
+                }
+            }
+
             return ParserCommand.INSTRUMENT;
         }
 
@@ -657,9 +679,72 @@ namespace MidiChord
             // Find the last label in the list with this name
         }
 
-        private int handleSongText(string txt)
+        private void parseSongText(string txt)
         {
-            return 0;
+            int pointer = 0;
+            int movepointer = 0;
+            bool chordFound = false;
+
+            if (_parserChordMode != ParserChordMode.COMMENT)
+            {
+                _parserChordMode = ParserChordMode.TEXT;
+            }
+
+            while (pointer < txt.Length)
+            {
+                chordFound = false;
+                movepointer = 1;
+
+                string firstChar = txt.Substring(pointer, 1);
+
+                if (_parserChordMode == ParserChordMode.COMMENT)
+                {
+                    if (firstChar.Equals(@"/"))
+                    {
+                        // Disable comment
+                        _parserChordMode = ParserChordMode.TEXT;
+                    }
+                    movepointer = 1;
+                }
+                else
+                {
+                    if (firstChar.Equals(@"["))
+                    {
+                        _parserChordMode = ParserChordMode.MEASURE;
+                        movepointer = 1;
+                    }
+                    else if (firstChar.Equals(@"]"))
+                    {
+                        _parserChordMode = ParserChordMode.TEXT;
+                        movepointer = 1;
+                    }
+                    else if (firstChar.Equals(@"/"))
+                    {
+                        // Enable comment
+                        Log("Comment part");
+                        _parserChordMode = ParserChordMode.COMMENT;
+                        movepointer = 1;
+                    }
+                    else if (firstChar.Equals(@" "))
+                    {
+                        movepointer = 1;
+                    }
+                    else
+                    {
+                        if (_parserChordMode == ParserChordMode.MEASURE)
+                        {
+                            movepointer = handleMeasureChord(txt, pointer);
+                            chordFound = movepointer > 0;
+                        }
+                        else if (_parserChordMode == ParserChordMode.BEAT)
+                        {
+                            movepointer = handleBeatChord(txt, pointer);
+                            chordFound = movepointer > 0;
+                        }
+                    }
+                }
+                pointer += movepointer;
+            }
         }
 
         private int handleBeatChord(string txt, int pointer)

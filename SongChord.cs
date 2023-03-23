@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sanford.Multimedia.Midi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +15,18 @@ namespace MidiChord
         public string Data;
         public int ParserPosition;
         public int BeatIndex;
+        public GeneralMidiInstrument Instrument;
 
         public override string ToString()
         {
-            return string.Format("{0}: {1} [{2}]", BeatIndex, Data, Type.ToString());
-        }
+            switch(Type)
+            {
+                case SongItemType.CHANGE_INSTRUMENT:
+                    return string.Format("{0}: {1} [{2}]", BeatIndex, "Instrument", Instrument.ToString());
 
+                default:
+                    return string.Format("{0}: {1} [{2}]", BeatIndex, Data, Type.ToString());
+            }
+        }
     }
 }

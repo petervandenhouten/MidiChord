@@ -20,7 +20,7 @@ namespace UnitTestMidiChord
                 "Hallo, how are you?"
             };
 
-            parser.ParseText(text);
+            parser.Parse(text);
 
             Assert.AreEqual(4, parser.GetNumberOfChords());
         }
@@ -40,7 +40,7 @@ namespace UnitTestMidiChord
                 "C E D E"
             };
 
-            parser.ParseText(text);
+            parser.Parse(text);
 
             Assert.AreEqual(6, parser.GetNumberOfChords());
         }
@@ -56,7 +56,7 @@ namespace UnitTestMidiChord
                 "Walking down dusty roads"
             };
 
-            parser.ParseText(text);
+            parser.Parse(text);
 
             Assert.AreEqual(4, parser.GetNumberOfChords());
         }
@@ -72,7 +72,7 @@ namespace UnitTestMidiChord
                 "Walking down dusty roads"
             };
 
-            parser.ParseText(text);
+            parser.Parse(text);
 
             Assert.AreEqual(2, parser.GetNumberOfChords());
         }
@@ -88,7 +88,7 @@ namespace UnitTestMidiChord
                 "Walking down dusty roads"
             };
 
-            parser.ParseText(text);
+            parser.Parse(text);
 
             Assert.AreEqual(3, parser.GetNumberOfChords());
         }
@@ -112,7 +112,7 @@ namespace UnitTestMidiChord
                 "C"
             };
 
-            parser.ParseText(text);
+            parser.Parse(text);
 
             Assert.AreEqual(3, parser.GetNumberOfChords());
         }

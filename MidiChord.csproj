@@ -145,6 +145,7 @@
     <Content Include="Chords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Sound.png" />
     <None Include="Resources\NewDocument.png" />
     <None Include="Resources\Play.png" />
     <None Include="Resources\Pause.png" />

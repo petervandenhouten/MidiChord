@@ -1,9 +1,8 @@
 ﻿Formatting
 ----------
 
-All measures are 4/4: Each measures contains 4 quarter notes. 
-A quarter note is one beat, so a measure contains also 4 beats.
-Other timings are not supported.
+All measures are 4/4: Each measures has the duration of a whole note. A measure contains 4 beats. 
+A beat has the duration of one quarter note. Other timings are not supported.
 
 Chord only line:
 
@@ -11,6 +10,10 @@ C = 1 measure with C chord of a whole note.
 C C = 2 measures with two times a C chord.
 C * = 2 measures with one time a C chord that is sustained into the second measure.
 C G Am F = 4 measures; 1st measure C chord, 2nd measure G chord, 3rd measure Am chord, 4rd measure F chord.
+
+|C| = 1 beat with C chord of a quarter note
+|C C| = 2 beats with C chords of a quarter note
+|C G Am D| = A measure with 4 chords of a quater note each.
 
 Song text line (ChordPro):
 
@@ -42,6 +45,7 @@ Song text line (ChordPro):
 {repeat: X}
 {repeat: 3* X}
 {to: X}
++ = Start playback here
 
 * label = repeat a part idendified by the label.
 *3 label = repeat a part 3 times, the part is idendified by the label.
@@ -52,11 +56,13 @@ counter
 |C| |D| |E| |A| C% C@ C$ C& Appregio(s)? or different loops
 {loop %: 1 2 3 4}   with 1=chord
 
-App:
+App backlog
+===========
 save default configuration instrument/bpm
 transpose?
 drum machine?
 show upcoming chord (for play along)
+change font of editor
 
 Chords
 

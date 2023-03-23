@@ -21,7 +21,6 @@ namespace MidiChord
 
         private ChordLivePlayer _midiLivePlayer;
         private ChordList _chordList;
-
         private bool _playing = false;
 
         private Queue<string> MRUlist = new Queue<string>();
@@ -39,6 +38,7 @@ namespace MidiChord
             _midiLivePlayer.SongEnded += new Action(_midiLivePlayer_SongEnded);
 
             // Default Settings
+            
             SetMIDIDevice(0);
             SetBeatsPerMinute(120);
             SetInstrument(GeneralMidiInstrument.AcousticGrandPiano);
@@ -170,7 +170,7 @@ namespace MidiChord
         private void debugLoggingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChordParser parser = new ChordParser(_chordList);
-            parser.ParseText(_textBox.Lines);
+            parser.Parse(_textBox.Lines);
 
             var dlg = new StringListDialog("Logging");
             dlg.SetText(parser.Logging);
@@ -180,7 +180,7 @@ namespace MidiChord
         private void exportMIDIFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChordParser parser = new ChordParser(_chordList);
-            List<SongItem> song = parser.ParseText(_textBox.Lines);
+            List<SongItem> song = parser.Parse(_textBox.Lines);
 
             // convert to track/sequence
             ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordList);
@@ -200,7 +200,7 @@ namespace MidiChord
             var list = new List<string>();
 
             ChordParser parser = new ChordParser(_chordList);
-            List<SongItem> song = parser.ParseText(_textBox.Lines);
+            List<SongItem> song = parser.Parse(_textBox.Lines);
 
             foreach (var songchord in song)
             {
@@ -282,7 +282,7 @@ namespace MidiChord
             if (!_playing)
             {
                 ChordParser parser = new ChordParser(_chordList);
-                List<SongItem> song = parser.ParseText(_textBox.Lines);
+                List<SongItem> song = parser.Parse(_textBox.Lines);
 
                 _midiLivePlayer.BeatsPerMinute = _beatsPerMinute;
                 _midiLivePlayer.SongInstrument = _instrument;
@@ -508,7 +508,7 @@ namespace MidiChord
 
         private void ChangeInstrument()
         {
-            InstrumentDialog dlg = new InstrumentDialog();
+            InstrumentDialog dlg = new InstrumentDialog(_midiLivePlayer);
 
             dlg.Instrument = _instrument;
 

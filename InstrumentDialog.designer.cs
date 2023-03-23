@@ -32,12 +32,13 @@
             this.instrumentComboBox = new System.Windows.Forms.ComboBox();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
+            this.buttonPreviewSound = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // outputLabel
             // 
             this.outputLabel.AutoSize = true;
-            this.outputLabel.Location = new System.Drawing.Point(50, 13);
+            this.outputLabel.Location = new System.Drawing.Point(13, 13);
             this.outputLabel.Name = "outputLabel";
             this.outputLabel.Size = new System.Drawing.Size(122, 13);
             this.outputLabel.TabIndex = 13;
@@ -52,8 +53,9 @@
             this.instrumentComboBox.FormattingEnabled = true;
             this.instrumentComboBox.Location = new System.Drawing.Point(16, 29);
             this.instrumentComboBox.Name = "instrumentComboBox";
-            this.instrumentComboBox.Size = new System.Drawing.Size(186, 21);
+            this.instrumentComboBox.Size = new System.Drawing.Size(152, 21);
             this.instrumentComboBox.TabIndex = 12;
+            this.instrumentComboBox.SelectedIndexChanged += new System.EventHandler(this.instrumentComboBox_SelectedIndexChanged);
             // 
             // cancelButton
             // 
@@ -79,11 +81,22 @@
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             // 
+            // buttonPreviewSound
+            // 
+            this.buttonPreviewSound.Image = global::MidiChord.Properties.Resources.Sound;
+            this.buttonPreviewSound.Location = new System.Drawing.Point(174, 27);
+            this.buttonPreviewSound.Name = "buttonPreviewSound";
+            this.buttonPreviewSound.Size = new System.Drawing.Size(28, 23);
+            this.buttonPreviewSound.TabIndex = 14;
+            this.buttonPreviewSound.UseVisualStyleBackColor = true;
+            this.buttonPreviewSound.Click += new System.EventHandler(this.buttonPreviewSound_Click);
+            // 
             // InstrumentDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(218, 114);
+            this.Controls.Add(this.buttonPreviewSound);
             this.Controls.Add(this.outputLabel);
             this.Controls.Add(this.instrumentComboBox);
             this.Controls.Add(this.cancelButton);
@@ -93,6 +106,7 @@
             this.Name = "InstrumentDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "MIDI Instrument";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.InstrumentDialog_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -104,5 +118,6 @@
         private System.Windows.Forms.ComboBox instrumentComboBox;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Button buttonPreviewSound;
     }
 }

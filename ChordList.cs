@@ -48,6 +48,7 @@ namespace MidiChord
 
         public bool ContainsChord(string chord)
         {
+            if (string.IsNullOrEmpty(chord)) return false;
             return _chordNotes.ContainsKey(chord);
         }
 

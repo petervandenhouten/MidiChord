@@ -9,7 +9,7 @@ namespace MidiChord
     internal class ChordLineDetector
     {
         private readonly string line;
-        private readonly char[] wordSeperators = { ' ', ',' };
+        private readonly char[] wordSeperators = { ' ', ',', '[', ']' };
         internal ChordLineDetector(string txt)
         {
             line = txt;
@@ -32,10 +32,13 @@ namespace MidiChord
             {
                 var possibleChord = word.Trim();
 
-                if (possibleChord.IndexOfAny( new char[] { '{', '}', '{', '}', '|', '/' }) >= 0 )
+                if (possibleChord.IndexOfAny( new char[] { '{', '}', '|', '/', '*' }) >= 0 )
                 {
                     wordcount--;
                 }
+
+                //possibleChord = possibleChord.Replace("[", "");
+                //possibleChord = possibleChord.Replace("]", "");
 
                 if (chordList.ContainsChord(possibleChord))
                 {
@@ -44,7 +47,8 @@ namespace MidiChord
             }
 
             // Check in the words are (known) chords
-            if (chordCount > (wordcount* 0.8))
+            int realwords = wordcount - chordCount;
+            if (realwords < 1)
             {
                 return true;
             }
