@@ -53,14 +53,15 @@ namespace MidiChord
             _toolStripStatusPlaying.Text = "Completed.";
         }
 
-        void _midiLivePlayer_BeatTick(int beat, int max, int position, string currentChord)
+        void _midiLivePlayer_BeatTick(int beat, int max, int position, string currentChord, string nextChord, string currentPart)
         {
             // todo cursos in text @ position
             int measure = (beat / 4) + 1;
             int beat_in_measure = (beat % 4) + 1;
 
             _statusBeatIndex.Text = measure.ToString() + "." + beat_in_measure.ToString();
-            _statusChord.Text = currentChord;
+            _statusChord.Text = currentChord + " (" + nextChord + ")";
+            _statusPlayingPart.Text = currentPart;
         }
 
         #endregion
@@ -131,6 +132,18 @@ namespace MidiChord
         #endregion
 
         #region Menu items
+
+        private void manualToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //var help = File.ReadAllLines("HelpTextFile.txt");
+            //var dlg = new StringListDialog("Logging");
+            //dlg.SetText(help);
+            //dlg.ShowDialog();
+
+            var help = File.ReadAllText("HelpTextFile.txt");
+            MessageBox.Show(help);
+
+        }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -550,5 +563,6 @@ namespace MidiChord
         }
 
         #endregion
+
     }
 }

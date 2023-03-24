@@ -32,8 +32,10 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.exportMIDIFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +63,7 @@
             this.debugSongToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._statusStrip = new System.Windows.Forms.StatusStrip();
             this._toolStripStatusPlaying = new System.Windows.Forms.ToolStripStatusLabel();
+            this._statusPlayingPart = new System.Windows.Forms.ToolStripStatusLabel();
             this._statusChord = new System.Windows.Forms.ToolStripStatusLabel();
             this._statusBeatIndex = new System.Windows.Forms.ToolStripStatusLabel();
             this._statusLabelBpm = new System.Windows.Forms.ToolStripStatusLabel();
@@ -68,18 +71,23 @@
             this._statusMidiDevice = new System.Windows.Forms.ToolStripStatusLabel();
             this._textBox = new System.Windows.Forms.TextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPause = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonStop = new System.Windows.Forms.ToolStripButton();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drumPatternToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.repeatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tempoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
+            this.transposeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -118,9 +126,17 @@
             // 
             this.newToolStripMenuItem.Image = global::MidiChord.Properties.Resources.NewDocument;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Image = global::MidiChord.Properties.Resources.OpenFile;
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.openToolStripMenuItem.Text = "Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // recentToolStripMenuItem
             // 
@@ -132,6 +148,14 @@
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(161, 6);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Save;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
@@ -156,7 +180,12 @@
             // 
             this.insertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.chordToolStripMenuItem,
-            this.instrumentToolStripMenuItem});
+            this.instrumentToolStripMenuItem,
+            this.labelToolStripMenuItem,
+            this.drumPatternToolStripMenuItem,
+            this.repeatToolStripMenuItem,
+            this.keyToolStripMenuItem,
+            this.tempoToolStripMenuItem});
             this.insertToolStripMenuItem.Name = "insertToolStripMenuItem";
             this.insertToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.insertToolStripMenuItem.Text = "Insert";
@@ -164,13 +193,13 @@
             // chordToolStripMenuItem
             // 
             this.chordToolStripMenuItem.Name = "chordToolStripMenuItem";
-            this.chordToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.chordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.chordToolStripMenuItem.Text = "Chord...";
             // 
             // instrumentToolStripMenuItem
             // 
             this.instrumentToolStripMenuItem.Name = "instrumentToolStripMenuItem";
-            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.instrumentToolStripMenuItem.Text = "Instrument...";
             // 
             // songToolStripMenuItem
@@ -182,7 +211,9 @@
             this.toolStripMenuItem5,
             this.soundOffToolStripMenuItem,
             this.toolStripMenuItem4,
-            this.setBeatsPerMinuteToolStripMenuItem});
+            this.setBeatsPerMinuteToolStripMenuItem,
+            this.toolStripMenuItem7,
+            this.transposeToolStripMenuItem});
             this.songToolStripMenuItem.Name = "songToolStripMenuItem";
             this.songToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.songToolStripMenuItem.Text = "Song";
@@ -290,8 +321,9 @@
             // manualToolStripMenuItem
             // 
             this.manualToolStripMenuItem.Name = "manualToolStripMenuItem";
-            this.manualToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.manualToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.manualToolStripMenuItem.Text = "Manual";
+            this.manualToolStripMenuItem.Click += new System.EventHandler(this.manualToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -322,6 +354,7 @@
             // 
             this._statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._toolStripStatusPlaying,
+            this._statusPlayingPart,
             this._statusChord,
             this._statusBeatIndex,
             this._statusLabelBpm,
@@ -346,6 +379,16 @@
             this._toolStripStatusPlaying.Size = new System.Drawing.Size(60, 19);
             this._toolStripStatusPlaying.Text = "-";
             // 
+            // _statusPlayingPart
+            // 
+            this._statusPlayingPart.AutoSize = false;
+            this._statusPlayingPart.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._statusPlayingPart.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
+            this._statusPlayingPart.Name = "_statusPlayingPart";
+            this._statusPlayingPart.Size = new System.Drawing.Size(60, 19);
+            // 
             // _statusChord
             // 
             this._statusChord.AutoSize = false;
@@ -354,7 +397,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this._statusChord.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this._statusChord.Name = "_statusChord";
-            this._statusChord.Size = new System.Drawing.Size(32, 19);
+            this._statusChord.Size = new System.Drawing.Size(48, 19);
             // 
             // _statusBeatIndex
             // 
@@ -430,16 +473,6 @@
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
             // toolStripButtonNew
             // 
             this.toolStripButtonNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -471,6 +504,11 @@
             this.toolStripButton3.Text = "Save";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripButton4
             // 
             this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -488,6 +526,11 @@
             this.toolStripButton5.Name = "toolStripButton5";
             this.toolStripButton5.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton5.Text = "toolStripButton5";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonPlay
             // 
@@ -520,21 +563,46 @@
             this.toolStripButtonStop.Text = "Stop";
             this.toolStripButtonStop.Click += new System.EventHandler(this.toolStripButtonStop_Click);
             // 
-            // openToolStripMenuItem
+            // labelToolStripMenuItem
             // 
-            this.openToolStripMenuItem.Image = global::MidiChord.Properties.Resources.OpenFile;
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.openToolStripMenuItem.Text = "Open...";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            this.labelToolStripMenuItem.Name = "labelToolStripMenuItem";
+            this.labelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.labelToolStripMenuItem.Text = "Label...";
             // 
-            // saveToolStripMenuItem
+            // drumPatternToolStripMenuItem
             // 
-            this.saveToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Save;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.drumPatternToolStripMenuItem.Name = "drumPatternToolStripMenuItem";
+            this.drumPatternToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.drumPatternToolStripMenuItem.Text = "Drum pattern...";
+            // 
+            // repeatToolStripMenuItem
+            // 
+            this.repeatToolStripMenuItem.Name = "repeatToolStripMenuItem";
+            this.repeatToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.repeatToolStripMenuItem.Text = "Repeat...";
+            // 
+            // keyToolStripMenuItem
+            // 
+            this.keyToolStripMenuItem.Name = "keyToolStripMenuItem";
+            this.keyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.keyToolStripMenuItem.Text = "Key...";
+            // 
+            // tempoToolStripMenuItem
+            // 
+            this.tempoToolStripMenuItem.Name = "tempoToolStripMenuItem";
+            this.tempoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tempoToolStripMenuItem.Text = "Tempo...";
+            // 
+            // toolStripMenuItem7
+            // 
+            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(188, 6);
+            // 
+            // transposeToolStripMenuItem
+            // 
+            this.transposeToolStripMenuItem.Name = "transposeToolStripMenuItem";
+            this.transposeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.transposeToolStripMenuItem.Text = "Transpose...";
             // 
             // FormMidiChord
             // 
@@ -614,6 +682,14 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonPlay;
         private System.Windows.Forms.ToolStripButton toolStripButtonPause;
         private System.Windows.Forms.ToolStripButton toolStripButtonStop;
+        private System.Windows.Forms.ToolStripStatusLabel _statusPlayingPart;
+        private System.Windows.Forms.ToolStripMenuItem labelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drumPatternToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem repeatToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tempoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
+        private System.Windows.Forms.ToolStripMenuItem transposeToolStripMenuItem;
     }
 }
 

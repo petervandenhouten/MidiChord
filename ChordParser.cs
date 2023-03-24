@@ -46,6 +46,7 @@ namespace MidiChord
         private string _key;
         private int _tempo;
         private GeneralMidiInstrument _instrument;
+        private string _currentLabel;
 
         private List<SongItem> _parserOutput;
         private readonly ChordList _chordList;
@@ -260,6 +261,7 @@ namespace MidiChord
             _metaData = new MetaData();
             _beatIndex = 0;
             _parserLineMode = ParserLineMode.CHORDS_OR_TEXT;
+            _currentLabel = "";
         }
 
         private void parseLine(int lineNumber, string txt)
@@ -610,10 +612,11 @@ namespace MidiChord
 
                     SongItem c = new SongItem
                     {
-                        Type = SongItem.SongItemType.CHANGE_INSTRUMENT,
-                        BeatIndex = _beatIndex,
-                        Instrument = instrument,
-                        ParserPosition = 0 // Not used anymore
+                        Type            = SongItem.SongItemType.CHANGE_INSTRUMENT,
+                        BeatIndex       = _beatIndex,
+                        Instrument      = instrument,
+                        ParserPosition  = 0, // Not used anymore
+                        Part            = _currentLabel
                     };
                     _parserOutput.Add(c);
                     Log("Instrument:", argument);
@@ -637,7 +640,8 @@ namespace MidiChord
                 Type            = SongItem.SongItemType.CHANGE_INSTRUMENT,
                 BeatIndex       = _beatIndex,
                 Data            = instrument,
-                ParserPosition  = pointer
+                ParserPosition  = pointer,
+                Part            = _currentLabel
             };
             _parserOutput.Add(c);
 
@@ -654,7 +658,11 @@ namespace MidiChord
             string label = txt.Substring(pos1 + 1, pos2 - pos1 - 1);
             label = label.Trim().ToLower();
 
-            addLabelFirstLine(label, lineNumber);
+            if (!string.IsNullOrEmpty(label))
+            {
+                addLabelFirstLine(label, lineNumber);
+                _currentLabel = label;
+            }
 
             return label;
         }
@@ -771,7 +779,8 @@ namespace MidiChord
                         Type           = SongItem.SongItemType.BEAT_CHORD,
                         BeatIndex      = _beatIndex,
                         Data           = chordName,
-                        ParserPosition = pointer
+                        ParserPosition = pointer,
+                        Part           = _currentLabel
                     };
                     _parserOutput.Add(c);
                     _lastChord = chordName;
@@ -817,7 +826,8 @@ namespace MidiChord
                         Type           = SongItem.SongItemType.MEASURE_CHORD,
                         BeatIndex      = _beatIndex,
                         Data           = chordName,
-                        ParserPosition = pointer
+                        ParserPosition = pointer,
+                        Part           = _currentLabel
                     };
                     _parserOutput.Add(c);
                     _lastChord = chordName;

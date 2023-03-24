@@ -13,6 +13,7 @@ namespace MidiChord
         
         public SongItemType Type;
         public string Data;
+        public string Part;
         public int ParserPosition;
         public int BeatIndex;
         public GeneralMidiInstrument Instrument;
