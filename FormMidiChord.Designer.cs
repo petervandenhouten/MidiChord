@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMidiChord));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,6 +41,11 @@
             this.insertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.instrumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drumPatternToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.repeatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tempoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.songToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,6 +54,8 @@
             this.soundOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.setBeatsPerMinuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
+            this.transposeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.midiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectMIDIOutputDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setDefaultInstrumentToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,19 +81,9 @@
             this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPause = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonStop = new System.Windows.Forms.ToolStripButton();
-            this.labelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.drumPatternToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.repeatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.keyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tempoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
-            this.transposeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -193,14 +189,44 @@
             // chordToolStripMenuItem
             // 
             this.chordToolStripMenuItem.Name = "chordToolStripMenuItem";
-            this.chordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.chordToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.chordToolStripMenuItem.Text = "Chord...";
             // 
             // instrumentToolStripMenuItem
             // 
             this.instrumentToolStripMenuItem.Name = "instrumentToolStripMenuItem";
-            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.instrumentToolStripMenuItem.Text = "Instrument...";
+            // 
+            // labelToolStripMenuItem
+            // 
+            this.labelToolStripMenuItem.Name = "labelToolStripMenuItem";
+            this.labelToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.labelToolStripMenuItem.Text = "Label...";
+            // 
+            // drumPatternToolStripMenuItem
+            // 
+            this.drumPatternToolStripMenuItem.Name = "drumPatternToolStripMenuItem";
+            this.drumPatternToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.drumPatternToolStripMenuItem.Text = "Drum pattern...";
+            // 
+            // repeatToolStripMenuItem
+            // 
+            this.repeatToolStripMenuItem.Name = "repeatToolStripMenuItem";
+            this.repeatToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.repeatToolStripMenuItem.Text = "Repeat...";
+            // 
+            // keyToolStripMenuItem
+            // 
+            this.keyToolStripMenuItem.Name = "keyToolStripMenuItem";
+            this.keyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.keyToolStripMenuItem.Text = "Key...";
+            // 
+            // tempoToolStripMenuItem
+            // 
+            this.tempoToolStripMenuItem.Name = "tempoToolStripMenuItem";
+            this.tempoToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.tempoToolStripMenuItem.Text = "Tempo...";
             // 
             // songToolStripMenuItem
             // 
@@ -269,6 +295,17 @@
             this.setBeatsPerMinuteToolStripMenuItem.Text = "Set beats per minute...";
             this.setBeatsPerMinuteToolStripMenuItem.Click += new System.EventHandler(this.setBeatsPerMinuteToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem7
+            // 
+            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(188, 6);
+            // 
+            // transposeToolStripMenuItem
+            // 
+            this.transposeToolStripMenuItem.Name = "transposeToolStripMenuItem";
+            this.transposeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.transposeToolStripMenuItem.Text = "Transpose...";
+            // 
             // midiToolStripMenuItem
             // 
             this.midiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -321,7 +358,7 @@
             // manualToolStripMenuItem
             // 
             this.manualToolStripMenuItem.Name = "manualToolStripMenuItem";
-            this.manualToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.manualToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.manualToolStripMenuItem.Text = "Manual";
             this.manualToolStripMenuItem.Click += new System.EventHandler(this.manualToolStripMenuItem_Click);
             // 
@@ -461,9 +498,6 @@
             this.toolStripButtonOpen,
             this.toolStripButton3,
             this.toolStripSeparator1,
-            this.toolStripButton4,
-            this.toolStripButton5,
-            this.toolStripSeparator2,
             this.toolStripButtonPlay,
             this.toolStripButtonPause,
             this.toolStripButtonStop});
@@ -509,29 +543,6 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButton4
-            // 
-            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
-            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton4.Text = "toolStripButton4";
-            // 
-            // toolStripButton5
-            // 
-            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
-            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton5.Text = "toolStripButton5";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
             // toolStripButtonPlay
             // 
             this.toolStripButtonPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -562,47 +573,6 @@
             this.toolStripButtonStop.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonStop.Text = "Stop";
             this.toolStripButtonStop.Click += new System.EventHandler(this.toolStripButtonStop_Click);
-            // 
-            // labelToolStripMenuItem
-            // 
-            this.labelToolStripMenuItem.Name = "labelToolStripMenuItem";
-            this.labelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.labelToolStripMenuItem.Text = "Label...";
-            // 
-            // drumPatternToolStripMenuItem
-            // 
-            this.drumPatternToolStripMenuItem.Name = "drumPatternToolStripMenuItem";
-            this.drumPatternToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.drumPatternToolStripMenuItem.Text = "Drum pattern...";
-            // 
-            // repeatToolStripMenuItem
-            // 
-            this.repeatToolStripMenuItem.Name = "repeatToolStripMenuItem";
-            this.repeatToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.repeatToolStripMenuItem.Text = "Repeat...";
-            // 
-            // keyToolStripMenuItem
-            // 
-            this.keyToolStripMenuItem.Name = "keyToolStripMenuItem";
-            this.keyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.keyToolStripMenuItem.Text = "Key...";
-            // 
-            // tempoToolStripMenuItem
-            // 
-            this.tempoToolStripMenuItem.Name = "tempoToolStripMenuItem";
-            this.tempoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.tempoToolStripMenuItem.Text = "Tempo...";
-            // 
-            // toolStripMenuItem7
-            // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(188, 6);
-            // 
-            // transposeToolStripMenuItem
-            // 
-            this.transposeToolStripMenuItem.Name = "transposeToolStripMenuItem";
-            this.transposeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.transposeToolStripMenuItem.Text = "Transpose...";
             // 
             // FormMidiChord
             // 
@@ -676,9 +646,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonOpen;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton toolStripButton4;
-        private System.Windows.Forms.ToolStripButton toolStripButton5;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripButtonPlay;
         private System.Windows.Forms.ToolStripButton toolStripButtonPause;
         private System.Windows.Forms.ToolStripButton toolStripButtonStop;

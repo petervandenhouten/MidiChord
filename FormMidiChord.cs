@@ -338,23 +338,27 @@ namespace MidiChord
         {
             bool bstatus = true;
 
-            try
+            if ( !string.IsNullOrEmpty(filename))
             {
-                System.IO.TextWriter writeFile = new StreamWriter(filename);
-                writeFile.Write(_textBox.Text);
-                writeFile.Flush();
-                writeFile.Close();
-                writeFile = null;
+                try
+                {
+                    System.IO.TextWriter writeFile = new StreamWriter(filename);
+                    writeFile.Write(_textBox.Text);
+                    writeFile.Flush();
+                    writeFile.Close();
+                    writeFile = null;
 
-                _saved = true;
+                    _saved = true;
 
-                SetCurrentFilename(filename);
+                    SetCurrentFilename(filename);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    bstatus = false;
+                }
             }
-            catch (IOException ex)
-            {
-                MessageBox.Show(ex.ToString());
-                bstatus = false;
-            }
+
             return bstatus;
         }
 
@@ -418,7 +422,7 @@ namespace MidiChord
         }
         private void SaveFile()
         {
-            if (_filename == null)
+            if ( string.IsNullOrEmpty(_filename))
             {
                 SaveAsFile();
             }

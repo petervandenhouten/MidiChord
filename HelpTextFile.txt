@@ -37,14 +37,16 @@ Song text line (ChordPro):
 {tempo: X} = beats per minute if number
 {transpose: +/- X}
 
-{drum: A T C B} Set drum pattern for next measures with 4 quarter notes
-{drum: A h T H C h B H} Set drum pattern for next measures with 8 eighth notes
+{drum1: A T C B} Set drum pattern for next measures with 4 quarter notes
+{drum2: A h T H C h B H} Set drum pattern for next measures with 8 eighth notes
+`drum3: have 3 drum channels for left hand, right hand, and foot)
 
 (save in midi as other channel?)
 
 {repeat: X}
 {repeat: 3* X}
 {to: X}
+
 + = Start playback here
 
 * label = repeat a part idendified by the label.
