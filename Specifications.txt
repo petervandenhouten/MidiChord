@@ -1,0 +1,57 @@
+﻿DRUMS:
+{drum left: A T . B} Set drum pattern for next measures with 4 quarter notes
+{drum right: A h T H C h B H} Set drum pattern for next measures with 8 eighth notes
+{drum foot: have 3 drum channels for left hand, right hand, and foot)
+{drum left:}   disable drum left
+
+RIFFS:
+{riff:hallo C3 C5 D3 D3}
+{play:hallo}
+
+
+(save in midi as other channel?)
+
+{repeat: X}
+{repeat: 3* X}
+{to: X}
+
++ = Start playback here
+
+* label = repeat a part idendified by the label.
+*3 label = repeat a part 3 times, the part is idendified by the label.
+^ label = jump to label
+
+Future extensions:
+counter
+|C| |D| |E| |A| C% C@ C$ C& Appregio(s)? or different loops
+{loop %: 1 2 3 4}   with 1=chord
+
+App backlog
+===========
+save default configuration instrument/bpm
+transpose?
+drum machine?
+show upcoming chord (for play along)
+change font of editor
+
+Editor
+======
+line numbers
+line indicator during playback
+auto scroll
+
+Chords
+======
+C D E F 
+Do Re Me
+I II IV (depends on key, default is C)
+
+
+Instruments
+===========
+Dialog select chords, bass and riff/melody instruments
+
+AI
+==
+combined chords and lyrics generator
+tokenizer with words 'hello' and chords [D]

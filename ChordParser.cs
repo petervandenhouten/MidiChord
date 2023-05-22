@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Windows.Forms.VisualStyles;
 using Sanford.Multimedia.Midi;
+using ScintillaNET;
+using static MidiChord.ChordPlayer;
 //using System.IO;
 //using static System.Net.Mime.MediaTypeNames;
 //using System.Reflection;
@@ -34,6 +38,8 @@ namespace MidiChord
         private enum ParserDuration { WHOLE, HALF, QUARTER };
 
         private enum ParserChordMode { MEASURE, BEAT, COMMENT, TEXT };
+
+        private enum ParserDrumType { LEFT, RIGHT, FOOT };
 
         private string _lastChord;
         private List<string> _logging;
@@ -229,7 +235,7 @@ namespace MidiChord
             return _track;
         }
          * ****/
-
+        
         public List<SongItem> Parse(string[] lines)
         {
             initializeParser();
@@ -497,7 +503,6 @@ namespace MidiChord
                     }
                 }
                 pointer += movepointer;
-
             }
         }
 
@@ -528,7 +533,73 @@ namespace MidiChord
             {
                 parserCommand = handleTitle(argument);
             }
+            else if ( command.Contains("drum"))
+            {
+                parserCommand = handleDrum(command, argument);
+            }
             return parserCommand;
+        }
+
+        private ParserCommand handleDrum(string command, string argument)
+        {
+            char[] drumSeperators = { ' ' };
+            var typeStr = command.Replace("drum","").Trim();
+            var hits = argument.Split(drumSeperators, StringSplitOptions.RemoveEmptyEntries);
+            var nrHits = hits.Length;
+
+            ParserDrumType drumtype;
+            if ( !Enum.TryParse(typeStr.ToUpper(),out drumtype))
+            {
+                Log("Invalid Drum type: " + typeStr);
+                return ParserCommand.NONE;
+            }
+            if (nrHits > 4)
+            {
+                Log("Invalid Drum pattern: " + " " + argument);
+                return ParserCommand.NONE;
+            }
+
+            int index = Array.IndexOf(Enum.GetValues(typeof(ParserDrumType)), drumtype);
+
+            // Log("Drum: #" + index + " " + argument + " " + nrHits.ToString());
+
+            if (nrHits == 0)
+            {
+                SongItem drum = new SongItem
+                {
+                    Type = SongItem.SongItemType.STOP_DRUM_PATTERN,
+                    ItemInstrument = getSongItemInstrument(drumtype),
+                    BeatIndex = _beatIndex
+                };
+                Log("Stop drum pattern: " + drumtype.ToString());
+                _parserOutput.Add(drum);
+            }
+            else 
+            {
+                SongItem drum = new SongItem
+                {
+                    Type = SongItem.SongItemType.START_DRUM_PATTERN,
+                    ItemInstrument = getSongItemInstrument(drumtype),
+                    BeatIndex = _beatIndex,
+                    Data = argument,
+                    ParserPosition = 0,
+                    Part = _currentLabel
+                };
+                Log("Drum pattern " + drumtype.ToString() + " : " + argument);
+                _parserOutput.Add(drum);
+            }
+            return ParserCommand.DRUM;
+        }
+
+        private SongItem.SongItemInstrument getSongItemInstrument(ParserDrumType drumtype)
+        {
+            switch(drumtype)
+            {
+                case ParserDrumType.RIGHT: return SongItem.SongItemInstrument.DRUM_RIGHT;
+                case ParserDrumType.FOOT: return SongItem.SongItemInstrument.DRUM_FOOT;
+                case ParserDrumType.LEFT:
+                default: return SongItem.SongItemInstrument.DRUM_LEFT;
+            }
         }
 
         private ParserCommand handleTitle(string argument)
@@ -1072,7 +1143,7 @@ namespace MidiChord
             int count = 0;
             foreach (var songitem in _parserOutput)
             {
-                if (songitem.Type == SongItem.SongItemType.DRUM_PATTERN)
+                if (songitem.Type == SongItem.SongItemType.START_DRUM_PATTERN)
                 {
                     count++;
                 }

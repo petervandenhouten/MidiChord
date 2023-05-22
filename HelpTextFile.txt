@@ -1,7 +1,7 @@
 ﻿Formatting
 ----------
 
-All measures are 4/4: Each measures has the duration of a whole note. A measure contains 4 beats. 
+All measures are 4/4: Each measures has the duration of one whole note. One measure contains 4 beats. 
 A beat has the duration of one quarter note. Other timings are not supported.
 
 Chord only line:
@@ -37,37 +37,3 @@ Song text line (ChordPro):
 {tempo: X} = beats per minute if number
 {transpose: +/- X}
 
-{drum1: A T C B} Set drum pattern for next measures with 4 quarter notes
-{drum2: A h T H C h B H} Set drum pattern for next measures with 8 eighth notes
-`drum3: have 3 drum channels for left hand, right hand, and foot)
-
-(save in midi as other channel?)
-
-{repeat: X}
-{repeat: 3* X}
-{to: X}
-
-+ = Start playback here
-
-* label = repeat a part idendified by the label.
-*3 label = repeat a part 3 times, the part is idendified by the label.
-^ label = jump to label
-
-Future extensions:
-counter
-|C| |D| |E| |A| C% C@ C$ C& Appregio(s)? or different loops
-{loop %: 1 2 3 4}   with 1=chord
-
-App backlog
-===========
-save default configuration instrument/bpm
-transpose?
-drum machine?
-show upcoming chord (for play along)
-change font of editor
-
-Chords
-
-C D E F 
-Do Re Me
-I II IV (depends on key, default is C)

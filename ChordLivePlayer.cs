@@ -6,6 +6,7 @@ using Sanford.Multimedia.Timers;
 using Sanford.Multimedia.Midi;
 using System.Windows.Forms;
 using Sanford.Multimedia;
+using static MidiChord.ChordPlayer;
 
 namespace MidiChord
 {
@@ -16,8 +17,8 @@ namespace MidiChord
         private int _countDown = 0;
         private string _currentLabel;
 
-        public ChordLivePlayer(ChordList chordNotes)
-            : base(chordNotes)
+        public ChordLivePlayer(ChordList chordNotes, DrumList drumNotes)
+            : base(chordNotes, drumNotes)
         {
             _currentLabel = "";
             _playbackTimer.Tick += new EventHandler(_playbackTimer_Tick);
@@ -73,7 +74,7 @@ namespace MidiChord
         {
             if (_countDown > 0)
             {
-                PlayCountDown();
+                playCountDown();
             }
             else
             {
@@ -81,21 +82,21 @@ namespace MidiChord
             }
         }
 
-        void PlayCountDown()
+        protected void playCountDown()
         {
             int parserPosition = 0;
             if (EnableMetronome == true)
             {
-                _midiOutputDevice.Send(_metronomeNoteOff.Result);
+                _midiOutputDevice.Send(_metronomeNoteOff);
                 if (_countDown % 4 == 0)
                 {
-                    _midiOutputDevice.Send(_metronomeFirstBeatInstrument.Result);
+                    _midiOutputDevice.Send(_metronomeFirstBeatInstrument);
                 }
                 else
                 {
-                    _midiOutputDevice.Send(_metronomeBeatInstument.Result);
+                    _midiOutputDevice.Send(_metronomeBeatInstument);
                 }
-                _midiOutputDevice.Send(_metronomeNoteOn.Result);
+                _midiOutputDevice.Send(_metronomeNoteOn);
             }
             // Notify client
             if (BeatTick != null)
@@ -105,56 +106,97 @@ namespace MidiChord
             _countDown--;
         }
 
+        // Called every tick!
         void PlaySong()
         {
             int parserPosition = 0;
             
-
             // find ALL notes on the beat index
-            foreach ( var entry in _data)
+            foreach (var entry in _data)
             {
-                MidiChord midiChord = GetMidiChord(entry.Data);
-
-                if (midiChord == null)
+                if (entry.Type == SongItem.SongItemType.MEASURE_CHORD ||
+                     entry.Type == SongItem.SongItemType.BEAT_CHORD)
                 {
-                    Stop();
-                    if (SongEnded != null) SongEnded();
-                    MessageBox.Show("Unknown chord: '" + entry.Data + "'");
-                    return;
-                }
+                    MidiChord midiChord = GetMidiChord(entry.Data);
 
-                if (entry.BeatIndex == _beatIndex)
-                {
-                    parserPosition = entry.ParserPosition;
-                    _currentLabel = entry.Part;
-
-                    if (_lastMidiChord != null)
+                    if (midiChord == null)
                     {
-                        foreach (var midiEvent in _lastMidiChord.NotesOff)
+                        Stop();
+                        if (SongEnded != null) SongEnded();
+                        MessageBox.Show("Unknown chord: '" + entry.Data + "'");
+                        return;
+                    }
+
+                    // Find on which beat we are (every tick we move a next beat)
+                    if (entry.BeatIndex == _beatIndex)
+                    {
+                        parserPosition = entry.ParserPosition;
+                        _currentLabel = entry.Part;
+
+                        if (_lastMidiChord != null)
+                        {
+                            foreach (var midiEvent in _lastMidiChord.NotesOff)
+                            {
+                                _midiOutputDevice.Send(midiEvent);
+                            }
+                        }
+                        foreach (var midiEvent in midiChord.NotesOn)
                         {
                             _midiOutputDevice.Send(midiEvent);
                         }
+                        _lastMidiChord = midiChord;
                     }
-                    foreach (var midiEvent in midiChord.NotesOn)
+                }
+                else if (entry.Type == SongItem.SongItemType.START_DRUM_PATTERN)
+                {
+                    DrumPattern drumPattern = GetDrumPattern(entry.Data);
+
+                    if (drumPattern == null)
                     {
-                        _midiOutputDevice.Send(midiEvent);
+                        Stop();
+                        if (SongEnded != null) SongEnded();
+                        MessageBox.Show("Invalid drum pattern: '" + entry.Data + "'");
+                        return;
                     }
-                    _lastMidiChord = midiChord;
+
+                    if (entry.BeatIndex <= _beatIndex)
+                    {
+                        // Activate pattern
+                        int drumPatternIndex = getDrumIndex(entry.ItemInstrument);
+                        if (drumPatternIndex >= 0)
+                        {
+                            _drumPatterns[drumPatternIndex] = drumPattern;
+                        }
+                    }
+                }
+                else if (entry.Type == SongItem.SongItemType.STOP_DRUM_PATTERN)
+                {
+                    if (entry.BeatIndex <= _beatIndex)
+                    {
+                        // deactivate
+                        int drumPatternIndex = getDrumIndex(entry.ItemInstrument);
+                        if (drumPatternIndex >= 0)
+                        {
+                            _drumPatterns[drumPatternIndex] = null;
+                        }
+                    }
                 }
             }
 
+            playDrumPattern();
+
             if (EnableMetronome == true)
             {
-                _midiOutputDevice.Send(_metronomeNoteOff.Result);
+                // _midiOutputDevice.Send(_metronomeNoteOff.Result);
                 if (_beatIndex % 4 == 0)
                 {
-                    _midiOutputDevice.Send( _metronomeFirstBeatInstrument.Result);
+                    _midiOutputDevice.Send( _metronomeFirstBeatInstrument);
                 }
                 else
                 {
-                    _midiOutputDevice.Send(_metronomeBeatInstument.Result);
+                    _midiOutputDevice.Send(_metronomeBeatInstument);
                 }
-                _midiOutputDevice.Send(_metronomeNoteOn.Result);
+                _midiOutputDevice.Send(_metronomeNoteOn);
             }
             // Notify client
             if (BeatTick != null)
@@ -183,7 +225,26 @@ namespace MidiChord
             }
         }
 
-
+        private void playDrumPattern()
+        {
+            _midiOutputDevice.Send(_drumInstument);
+            
+            for ( int drum =0; drum<3; drum++)
+            {
+                if (_drumPatterns[drum] != null)
+                {
+                    int beat_in_measure = (base._beatIndex % 4);
+                    if (beat_in_measure < _drumPatterns[drum].NotesOn.Count)
+                    {
+                        var midiEvent = _drumPatterns[drum].NotesOn[beat_in_measure];
+                        if (midiEvent != null)
+                        {
+                            _midiOutputDevice.Send(midiEvent);
+                        }
+                    }
+                }
+            }
+        }
 
         public void Start()
         {

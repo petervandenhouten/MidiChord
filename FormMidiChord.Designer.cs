@@ -75,15 +75,17 @@
             this._statusLabelBpm = new System.Windows.Forms.ToolStripStatusLabel();
             this._StatusLabelInstrument = new System.Windows.Forms.ToolStripStatusLabel();
             this._statusMidiDevice = new System.Windows.Forms.ToolStripStatusLabel();
-            this._textBox = new System.Windows.Forms.TextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonMetronome = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPause = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonStop = new System.Windows.Forms.ToolStripButton();
+            this._textBox = new ScintillaNET.Scintilla();
             this.menuStrip1.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -478,19 +480,6 @@
             this._statusMidiDevice.Size = new System.Drawing.Size(64, 19);
             this._statusMidiDevice.Text = "No device";
             // 
-            // _textBox
-            // 
-            this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._textBox.Location = new System.Drawing.Point(0, 52);
-            this._textBox.Multiline = true;
-            this._textBox.Name = "_textBox";
-            this._textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._textBox.Size = new System.Drawing.Size(376, 212);
-            this._textBox.TabIndex = 4;
-            this._textBox.TextChanged += new System.EventHandler(this._textBox_TextChanged);
-            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -498,6 +487,8 @@
             this.toolStripButtonOpen,
             this.toolStripButton3,
             this.toolStripSeparator1,
+            this.toolStripButtonMetronome,
+            this.toolStripSeparator2,
             this.toolStripButtonPlay,
             this.toolStripButtonPause,
             this.toolStripButtonStop});
@@ -543,6 +534,21 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripButtonMetronome
+            // 
+            this.toolStripButtonMetronome.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonMetronome.Image = global::MidiChord.Properties.Resources.Metronome;
+            this.toolStripButtonMetronome.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonMetronome.Name = "toolStripButtonMetronome";
+            this.toolStripButtonMetronome.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonMetronome.Text = "Metronome";
+            this.toolStripButtonMetronome.Click += new System.EventHandler(this.toolStripButtonMetronome_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripButtonPlay
             // 
             this.toolStripButtonPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -574,13 +580,24 @@
             this.toolStripButtonStop.Text = "Stop";
             this.toolStripButtonStop.Click += new System.EventHandler(this.toolStripButtonStop_Click);
             // 
+            // _textBox
+            // 
+            this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._textBox.Location = new System.Drawing.Point(0, 52);
+            this._textBox.Name = "_textBox";
+            this._textBox.Size = new System.Drawing.Size(375, 210);
+            this._textBox.TabIndex = 6;
+            this._textBox.Text = "scintilla1";
+            // 
             // FormMidiChord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(376, 289);
-            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this._textBox);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this._statusStrip);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -625,7 +642,6 @@
         private System.Windows.Forms.ToolStripMenuItem setDefaultInstrumentToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem soundOffToolStripMenuItem;
-        private System.Windows.Forms.TextBox _textBox;
         private System.Windows.Forms.ToolStripStatusLabel _statusLabelBpm;
         private System.Windows.Forms.ToolStripStatusLabel _StatusLabelInstrument;
         private System.Windows.Forms.ToolStripMenuItem mIDIChannelsToolStripMenuItem;
@@ -657,6 +673,9 @@
         private System.Windows.Forms.ToolStripMenuItem tempoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
         private System.Windows.Forms.ToolStripMenuItem transposeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButtonMetronome;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private ScintillaNET.Scintilla _textBox;
     }
 }
 

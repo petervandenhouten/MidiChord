@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MidiChord;
-using System;
 
 namespace UnitTestMidiChord
 {

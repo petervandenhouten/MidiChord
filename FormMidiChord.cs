@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.UI;
+using System.Linq;
+using ScintillaNET;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Drawing;
 
 namespace MidiChord
 {
@@ -21,6 +25,7 @@ namespace MidiChord
 
         private ChordLivePlayer _midiLivePlayer;
         private ChordList _chordList;
+        private DrumList _drumList;
         private bool _playing = false;
 
         private Queue<string> MRUlist = new Queue<string>();
@@ -29,11 +34,14 @@ namespace MidiChord
         {
             InitializeComponent();
 
-            // Load choard
+            // Load chords
             _chordList = new ChordList();
 
+            // Load drums
+            _drumList = new DrumList();
+
             // Midi sequence generator
-            _midiLivePlayer = new ChordLivePlayer(_chordList);
+            _midiLivePlayer = new ChordLivePlayer(_chordList, _drumList);
             _midiLivePlayer.BeatTick += new ChordLivePlayer.delegateBeatTick(_midiLivePlayer_BeatTick);
             _midiLivePlayer.SongEnded += new Action(_midiLivePlayer_SongEnded);
 
@@ -43,7 +51,12 @@ namespace MidiChord
             SetBeatsPerMinute(120);
             SetInstrument(GeneralMidiInstrument.AcousticGrandPiano);
             SetMetronomeInstrument(GeneralMidiInstrument.TaikoDrum, GeneralMidiInstrument.Woodblock);
+
+            UpdateToolStripButtons();
+
+            SetupTextEditor();
         }
+
 
         #region Live Player Events
 
@@ -183,7 +196,7 @@ namespace MidiChord
         private void debugLoggingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChordParser parser = new ChordParser(_chordList);
-            parser.Parse(_textBox.Lines);
+            parser.Parse( convertLines(_textBox.Lines));
 
             var dlg = new StringListDialog("Logging");
             dlg.SetText(parser.Logging);
@@ -193,10 +206,10 @@ namespace MidiChord
         private void exportMIDIFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChordParser parser = new ChordParser(_chordList);
-            List<SongItem> song = parser.Parse(_textBox.Lines);
+            List<SongItem> song = parser.Parse(convertLines(_textBox.Lines));
 
             // convert to track/sequence
-            ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordList);
+            ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordList, _drumList);
             midiConverter.SetSong(song);
 
             midiConverter.BeatsPerMinute = _beatsPerMinute;
@@ -213,7 +226,7 @@ namespace MidiChord
             var list = new List<string>();
 
             ChordParser parser = new ChordParser(_chordList);
-            List<SongItem> song = parser.Parse(_textBox.Lines);
+            List<SongItem> song = parser.Parse(convertLines(_textBox.Lines));
 
             foreach (var songchord in song)
             {
@@ -258,6 +271,11 @@ namespace MidiChord
 
         #region Toolbar buttons
 
+        private void UpdateToolStripButtons()
+        {
+            toolStripButtonMetronome.Checked = _midiLivePlayer.EnableMetronome;
+        }
+
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             SaveFile();
@@ -286,6 +304,13 @@ namespace MidiChord
         {
             Stop();
         }
+
+        private void toolStripButtonMetronome_Click(object sender, EventArgs e)
+        {
+            _midiLivePlayer.EnableMetronome = !_midiLivePlayer.EnableMetronome;
+            UpdateToolStripButtons();
+        }
+
         #endregion
 
         #region Song playback
@@ -295,7 +320,7 @@ namespace MidiChord
             if (!_playing)
             {
                 ChordParser parser = new ChordParser(_chordList);
-                List<SongItem> song = parser.Parse(_textBox.Lines);
+                List<SongItem> song = parser.Parse(convertLines(_textBox.Lines));
 
                 _midiLivePlayer.BeatsPerMinute = _beatsPerMinute;
                 _midiLivePlayer.SongInstrument = _instrument;
@@ -568,5 +593,50 @@ namespace MidiChord
 
         #endregion
 
+        #region Scintilla Conversion and settings
+
+        private void SetupTextEditor()
+        {
+            // Configuring the default style with properties
+            // we have common to every lexer style saves time.
+            _textBox.StyleResetDefault();
+            _textBox.Styles[Style.Default].Font = "Consolas";
+            _textBox.Styles[Style.Default].Size = 10;
+            _textBox.StyleClearAll();
+
+            // Configure the CPP (C#) lexer styles
+            _textBox.Styles[Style.Default].ForeColor = Color.Silver;
+            _textBox.Styles[Style.Cpp.Comment].ForeColor = Color.FromArgb(0, 128, 0); // Green
+            _textBox.Styles[Style.Cpp.CommentLine].ForeColor = Color.FromArgb(0, 128, 0); // Green
+            _textBox.Styles[Style.Cpp.CommentLineDoc].ForeColor = Color.FromArgb(128, 128, 128); // Gray
+            //_textBox.Styles[Style.Cpp.Number].ForeColor = Color.Olive;
+            _textBox.Styles[Style.Cpp.Word].ForeColor = Color.Blue;
+            _textBox.Styles[Style.Cpp.Word2].Bold = true;
+            //_textBox.Styles[Style.Cpp.String].ForeColor = Color.FromArgb(163, 21, 21); // Red
+            //_textBox.Styles[Style.Cpp.Character].ForeColor = Color.FromArgb(163, 21, 21); // Red
+            //_textBox.Styles[Style.Cpp.Verbatim].ForeColor = Color.FromArgb(163, 21, 21); // Red
+            //_textBox.Styles[Style.Cpp.StringEol].BackColor = Color.Pink;
+            //_textBox.Styles[Style.Cpp.Operator].ForeColor = Color.Purple;
+            //_textBox.Styles[Style.Cpp.Preprocessor].ForeColor = Color.Maroon;
+            _textBox.Styles[Style.Cpp.CommentDocKeyword].ForeColor = Color.Orange;
+            _textBox.Lexer = Lexer.Cpp;
+
+            _textBox.SetKeywords(0, "Title title Verse verse Intro intro chorus Chorus Outro outro drum riff label repeat");
+            _textBox.SetKeywords(1, "C D E F G");
+
+        }
+
+        private string[] convertLines(ScintillaNET.LineCollection lines)
+        {
+            List<string> text_lines = new List<string>();
+
+            foreach (var scintille_line in lines)
+            {
+                text_lines.Add(scintille_line.Text);
+            }
+
+            return text_lines.ToArray();
+        }
+        #endregion
     }
 }

@@ -9,7 +9,7 @@ namespace UnitTestMidiChord
         [TestMethod]
         public void When_Converted_Then_The_Ouput_Has_The_Same_Number_Of_Lines_As_The_Input()
         {
-
+            Assert.Fail();
         }
     }
 }

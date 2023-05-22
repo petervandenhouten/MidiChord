@@ -63,6 +63,9 @@
     <Reference Include="Sanford.Multimedia.Midi, Version=6.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Sanford.Multimedia.Midi.6.6.2\lib\net20\Sanford.Multimedia.Midi.dll</HintPath>
     </Reference>
+    <Reference Include="ScintillaNET, Version=3.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\jacobslusser.ScintillaNET.3.6.3\lib\net40\ScintillaNET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -86,6 +89,7 @@
     <Compile Include="ChordPlayer.cs" />
     <Compile Include="ChordProConverter.cs" />
     <Compile Include="ChordToMidiConvertor.cs" />
+    <Compile Include="DrumList.cs" />
     <Compile Include="FormMidiChord.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +149,8 @@
     <Content Include="Chords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Metronome.png" />
+    <Content Include="Specifications.txt" />
     <None Include="Resources\Sound.png" />
     <None Include="Resources\NewDocument.png" />
     <None Include="Resources\Play.png" />

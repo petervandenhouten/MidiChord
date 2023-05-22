@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Windows.Forms;
 using Sanford.Multimedia.Midi;
 
 namespace MidiChord
@@ -13,8 +16,17 @@ namespace MidiChord
         protected int _beatIndex = 0;
         protected int _lastBeatIndex = 0;
         internal MidiChord _lastMidiChord = null;
+        protected DrumPattern[] _drumPatterns = new DrumPattern[3];
+        //internal MidiDrum _lastMidiDrumLeft = null;
+        //internal MidiDrum _lastMidiDrumRight = null;
+        //internal MidiDrum _lastMidiDrumFoot = null;
+        internal MidiRiff _lastMidiRiff = null;
+
+        public enum DrumEvent { START_PATTERN, STOP_PATTERN };
+        public enum DrumType { LEFT_HAND, RIGHT_HAND, FOOT };
 
         private readonly ChordList _chordList;
+        private readonly DrumList _drumList;
 
         internal class MidiChord
         {
@@ -23,31 +35,62 @@ namespace MidiChord
             internal List<ChannelMessage> NotesOff = new List<ChannelMessage>();
         }
 
-        protected ChannelMessageBuilder _metronomeFirstBeatInstrument;
-        protected ChannelMessageBuilder _metronomeBeatInstument;
-        protected ChannelMessageBuilder _metronomeNoteOn;
-        protected ChannelMessageBuilder _metronomeNoteOff;
+        protected class DrumPattern
+        {
+            internal string Name;
+            internal DrumType Type;
+            internal DrumEvent Event;
+            internal int TypeIndex;
+            internal List<ChannelMessage> NotesOn = new List<ChannelMessage>();
+            internal List<ChannelMessage> NotesOff = new List<ChannelMessage>();
+        }
+
+        internal class MidiRiff
+        {
+            internal string Name;
+            internal List<ChannelMessage> NotesOn = new List<ChannelMessage>();
+            internal List<ChannelMessage> NotesOff = new List<ChannelMessage>();
+        }
+
+        protected ChannelMessage _metronomeFirstBeatInstrument;
+        protected ChannelMessage _metronomeBeatInstument;
+        protected ChannelMessage _metronomeNoteOn;
+        protected ChannelMessage _metronomeNoteOff;
+        protected ChannelMessage _drumInstument;
+        protected ChannelMessage _drumNoteOff;
+
+        protected MetaMessage _chordMetaText;
+        protected MetaMessage _metronomeMetaText;
+        protected MetaMessage _drumMetaText;
 
         public GeneralMidiInstrument SongInstrument { get; set; }
         public GeneralMidiInstrument MetronomeFirstBeatInstrument { get; set; }
         public GeneralMidiInstrument MetronomeInstrument { get; set; }
         public int BeatsPerMinute { get; set; }
         public int MetronomeMidiChannel { get; set; }
-        public int SongMidiChannel { get; set; }
+        public int DrumMidiChannel { get; set; }
+        public int ChordMidiChannel { get; set; }
         public bool EnableMetronome { get; set; }
+        public int DrumVolume { get; set; }
+        public int ChordVolume { get; set; }
+        public int MetronomeVolume { get; set; }
 
-        public ChordPlayer(ChordList chordNotes)
+        public ChordPlayer(ChordList chordNotes, DrumList drumNotes)
         {
             _chordList = chordNotes;
+            _drumList = drumNotes;
 
             BeatsPerMinute = 60;
             SongInstrument = GeneralMidiInstrument.AcousticGrandPiano;
             MetronomeFirstBeatInstrument = GeneralMidiInstrument.Woodblock;
             MetronomeInstrument = GeneralMidiInstrument.Agogo;
             MetronomeMidiChannel = 1;
-            SongMidiChannel = 0;
+            ChordMidiChannel = 0;
             EnableMetronome = true;
-
+            DrumMidiChannel = 9;
+            DrumVolume = 127;
+            ChordVolume = 127;
+            MetronomeVolume = 60;
         }
 
         public void SetSong(List<SongItem> song)
@@ -61,42 +104,93 @@ namespace MidiChord
         protected void Reset()
         {
             _beatIndex = 0;
-            UpdateMetronomeNotes();
+            createCommonMidiMessages();
+            ResetDrumPatterns();
         }
 
-        protected void UpdateMetronomeNotes()
+        private void ResetDrumPatterns()
+        {
+            _drumPatterns[0] = null;
+            _drumPatterns[1] = null;
+            _drumPatterns[2] = null;
+        }
+
+        protected void createCommonMidiMessages()
         {
             // create notes for metronome
-            int metronomeVolume = 75;
             int metronomeNote = 60;
-            //int metronomeDelay = 10;
+            int drumInstrument = 1;
 
-            _metronomeFirstBeatInstrument = new ChannelMessageBuilder();
-            _metronomeFirstBeatInstrument.Command = ChannelCommand.ProgramChange;
-            _metronomeFirstBeatInstrument.MidiChannel = MetronomeMidiChannel;
-            _metronomeFirstBeatInstrument.Data1 = (int)MetronomeFirstBeatInstrument;
-            _metronomeFirstBeatInstrument.Build();
+            var metaBuilder = new MetaTextBuilder();
+            metaBuilder.Type = MetaType.TrackName;
+            metaBuilder.Text = "Chords";
+            metaBuilder.Build();
+            _chordMetaText = metaBuilder.Result;
 
-            _metronomeBeatInstument = new ChannelMessageBuilder();
-            _metronomeBeatInstument.Command = ChannelCommand.ProgramChange;
-            _metronomeBeatInstument.MidiChannel = MetronomeMidiChannel;
-            _metronomeBeatInstument.Data1 = (int)MetronomeInstrument;
-            _metronomeBeatInstument.Build();
+            metaBuilder = new MetaTextBuilder();
+            metaBuilder.Type = MetaType.TrackName;
+            metaBuilder.Text = "Metronome";
+            metaBuilder.Build();
+            _metronomeMetaText = metaBuilder.Result;
 
-            _metronomeNoteOn = new ChannelMessageBuilder();
-            _metronomeNoteOn.Command = ChannelCommand.NoteOn;
-            _metronomeNoteOn.MidiChannel = MetronomeMidiChannel;
-            _metronomeNoteOn.Data1 = metronomeNote;
-            _metronomeNoteOn.Data2 = metronomeVolume;
-            _metronomeNoteOn.Build();
+            metaBuilder = new MetaTextBuilder();
+            metaBuilder.Type = MetaType.TrackName;
+            metaBuilder.Text = "Drums";
+            metaBuilder.Build();
+            _drumMetaText = metaBuilder.Result;
 
-            _metronomeNoteOff = new ChannelMessageBuilder();
-            _metronomeNoteOff.Command = ChannelCommand.NoteOff;
-            _metronomeNoteOff.MidiChannel = MetronomeMidiChannel;
-            _metronomeNoteOff.Data1 = metronomeNote;
-            _metronomeNoteOff.Data2 = metronomeVolume;
-            _metronomeNoteOff.Build();
+            var builder = new ChannelMessageBuilder();
+            builder.Command = ChannelCommand.ProgramChange;
+            builder.MidiChannel = MetronomeMidiChannel;
+            builder.Data1 = (int)MetronomeFirstBeatInstrument;
+            builder.Build();
+            _metronomeFirstBeatInstrument = builder.Result;
 
+            // MIDI event for normal channel (non-drum channel 10)
+            builder = new ChannelMessageBuilder();
+            builder.Command = ChannelCommand.ProgramChange;
+            builder.MidiChannel = MetronomeMidiChannel;
+            builder.Data1 = (int)MetronomeFirstBeatInstrument;
+            _metronomeBeatInstument = builder.Result;
+
+            builder = new ChannelMessageBuilder();
+            builder.Command = ChannelCommand.ProgramChange;
+            builder.MidiChannel = MetronomeMidiChannel;
+            builder.Data1 = (int)MetronomeInstrument;
+            builder.Build();
+            _metronomeBeatInstument = builder.Result;
+
+            builder = new ChannelMessageBuilder();
+            builder.Command = ChannelCommand.NoteOn;
+            builder.MidiChannel = MetronomeMidiChannel;
+            builder.Data1 = metronomeNote;
+            builder.Data2 = MetronomeVolume;
+            builder.Build();
+            _metronomeNoteOn = builder.Result;
+
+            builder = new ChannelMessageBuilder();
+            builder.Command = ChannelCommand.NoteOff;
+            builder.MidiChannel = MetronomeMidiChannel;
+            builder.Data1 = metronomeNote;
+            builder.Data2 = MetronomeVolume;
+            builder.Build();
+            _metronomeNoteOff = builder.Result;
+
+            builder = new ChannelMessageBuilder();
+            builder.Command = ChannelCommand.ProgramChange;
+            builder.MidiChannel = DrumMidiChannel;
+            builder.Data1 = 80; // ??
+            builder.Data2 = 100; // ??
+            builder.Build();
+            _drumInstument = builder.Result;
+
+            builder = new ChannelMessageBuilder();
+            builder.Command = ChannelCommand.NoteOff;
+            builder.MidiChannel = DrumMidiChannel;
+            builder.Data1 = metronomeNote;
+            builder.Data2 = MetronomeVolume;
+            builder.Build();
+            _drumNoteOff = builder.Result;
         }
 
         internal MidiChord GetMidiChord(string chord)
@@ -115,9 +209,9 @@ namespace MidiChord
                     {
                         ChannelMessageBuilder builder = new ChannelMessageBuilder();
                         builder.Command = ChannelCommand.NoteOn;
-                        builder.MidiChannel = 0;
+                        builder.MidiChannel = ChordMidiChannel;
                         builder.Data1 = data;
-                        builder.Data2 = 127;
+                        builder.Data2 = ChordVolume;
                         builder.Build();
 
                         newChord.NotesOn.Add(builder.Result);
@@ -135,6 +229,68 @@ namespace MidiChord
                 return null;
             }
             return newChord;
+        }
+
+        protected DrumPattern GetDrumPattern(string drumpattern)
+        {
+            char[] drumSeperators = { ' ' };
+            var drums = drumpattern.Split(drumSeperators, StringSplitOptions.RemoveEmptyEntries);
+            int nrDrums = drums.Length;
+
+            int drumNote = 1;
+
+            if (nrDrums>=1 && nrDrums<=4 )
+            {
+                DrumPattern newDrum = new DrumPattern();
+
+                foreach (var drum in drums)
+                {
+                    int data = 0;
+
+                    if (!drum.Contains("."))
+                    {
+                        data = GetMidiDrumNote(drum);
+
+                        if (data <= 0)
+                        {
+                            return null;
+                        }
+                    }
+
+                    if (data > 0)
+                    {
+                        var builder = new ChannelMessageBuilder();
+                        builder.Command = ChannelCommand.NoteOn;
+                        builder.MidiChannel = DrumMidiChannel;
+                        builder.Data1 = data;
+                        builder.Data2 = DrumVolume;
+                        builder.Build();
+
+                        newDrum.NotesOn.Add(builder.Result);
+
+                        builder = new ChannelMessageBuilder();
+                        builder.Command = ChannelCommand.NoteOff;
+                        builder.MidiChannel = DrumMidiChannel;
+                        builder.Data1 = data;
+                        builder.Data2 = DrumVolume;
+                        builder.Build();
+
+                        newDrum.NotesOff.Add(builder.Result);
+                    }
+                    else
+                    {
+                        newDrum.NotesOn.Add(null);
+                    }
+                }
+
+                return newDrum;
+            }
+            return null;
+        }
+
+        private int GetMidiDrumNote(string drum)
+        {
+            return _drumList.GetDrum(drum);
         }
 
         protected ChannelMessage GetMidiProgram(GeneralMidiInstrument instrument)
@@ -213,6 +369,17 @@ namespace MidiChord
 
             return max;
         }
+        protected int getDrumIndex(SongItem.SongItemInstrument itemInstrument)
+        {
+            switch (itemInstrument)
+            {
+                case SongItem.SongItemInstrument.DRUM_LEFT: return 0;
+                case SongItem.SongItemInstrument.DRUM_RIGHT: return 1;
+                case SongItem.SongItemInstrument.DRUM_FOOT: return 2;
+                default: return -1;
+            }
+        }
+
 
     }
 }
