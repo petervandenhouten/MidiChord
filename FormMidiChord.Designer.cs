@@ -589,7 +589,6 @@
             this._textBox.Name = "_textBox";
             this._textBox.Size = new System.Drawing.Size(375, 210);
             this._textBox.TabIndex = 6;
-            this._textBox.Text = "scintilla1";
             // 
             // FormMidiChord
             // 

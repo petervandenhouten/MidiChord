@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -144,5 +145,14 @@ namespace MidiChord
             };
         }
 
+        internal string GetChordsInOneString()
+        {
+            string oneline = "";
+            foreach(var chord in _chordNotes.Keys)
+            {
+                oneline += chord + " ";
+            }
+            return oneline;
+        }
     }
 }

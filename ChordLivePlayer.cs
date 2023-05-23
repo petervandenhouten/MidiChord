@@ -16,6 +16,7 @@ namespace MidiChord
         private OutputDevice _midiOutputDevice;
         private int _countDown = 0;
         private string _currentLabel;
+        private int _currentParserLine = -1;
 
         public ChordLivePlayer(ChordList chordNotes, DrumList drumNotes)
             : base(chordNotes, drumNotes)
@@ -84,7 +85,6 @@ namespace MidiChord
 
         protected void playCountDown()
         {
-            int parserPosition = 0;
             if (EnableMetronome == true)
             {
                 _midiOutputDevice.Send(_metronomeNoteOff);
@@ -101,7 +101,7 @@ namespace MidiChord
             // Notify client
             if (BeatTick != null)
             {
-                BeatTick( -_countDown, _lastBeatIndex, parserPosition, "", "", "Countdown");
+                BeatTick( -_countDown, _lastBeatIndex, 0, "", "", "Countdown");
             }
             _countDown--;
         }
@@ -109,8 +109,6 @@ namespace MidiChord
         // Called every tick!
         void PlaySong()
         {
-            int parserPosition = 0;
-            
             // find ALL notes on the beat index
             foreach (var entry in _data)
             {
@@ -130,7 +128,6 @@ namespace MidiChord
                     // Find on which beat we are (every tick we move a next beat)
                     if (entry.BeatIndex == _beatIndex)
                     {
-                        parserPosition = entry.ParserPosition;
                         _currentLabel = entry.Part;
 
                         if (_lastMidiChord != null)
@@ -181,6 +178,12 @@ namespace MidiChord
                         }
                     }
                 }
+
+                if (entry.BeatIndex == _beatIndex)
+                {
+                    // check line
+                    _currentParserLine = Math.Max(entry.LineNumber, _currentParserLine);
+                }
             }
 
             playDrumPattern();
@@ -205,7 +208,7 @@ namespace MidiChord
 
                 // TODO: next chord
 
-                BeatTick(_beatIndex, _lastBeatIndex, parserPosition, chordname, "", _currentLabel);
+                BeatTick(_beatIndex, _lastBeatIndex, _currentParserLine, chordname, "", _currentLabel);
             }
 
             base._beatIndex++;
@@ -251,6 +254,7 @@ namespace MidiChord
             Reset();
             _currentLabel = "";
             _countDown = 0; // make option
+            _currentParserLine = 0;
             SetMidiInstrument();
             _playbackTimer.Interval = base.GetBeatTimeInMs(BeatsPerMinute);
             _playbackTimer.Start();

@@ -28,6 +28,9 @@ namespace MidiChord
         private DrumList _drumList;
         private bool _playing = false;
 
+        private int _lastLineMarker = -1;
+        private const int CURRENT_POSITION_MARKER = 0;
+
         private Queue<string> MRUlist = new Queue<string>();
 
         public FormMidiChord()
@@ -66,7 +69,7 @@ namespace MidiChord
             _toolStripStatusPlaying.Text = "Completed.";
         }
 
-        void _midiLivePlayer_BeatTick(int beat, int max, int position, string currentChord, string nextChord, string currentPart)
+        void _midiLivePlayer_BeatTick(int beat, int max, int line, string currentChord, string nextChord, string currentPart)
         {
             // todo cursos in text @ position
             int measure = (beat / 4) + 1;
@@ -75,6 +78,31 @@ namespace MidiChord
             _statusBeatIndex.Text = measure.ToString() + "." + beat_in_measure.ToString();
             _statusChord.Text = currentChord + " (" + nextChord + ")";
             _statusPlayingPart.Text = currentPart;
+
+            if (_lastLineMarker >= 0 && line != _lastLineMarker)
+            {
+                if (_lastLineMarker < _textBox.Lines.Count)
+                {
+                    _textBox.Lines[_lastLineMarker].MarkerDelete(CURRENT_POSITION_MARKER);
+                }
+            }
+            if (line >=0 && line>_lastLineMarker && line < _textBox.Lines.Count)
+            {
+                _textBox.Lines[line].MarkerAdd(CURRENT_POSITION_MARKER);
+                _lastLineMarker = line;
+                keepCurrentLineOnScreen(line);
+            }
+        }
+
+        private void keepCurrentLineOnScreen(int currentLine)
+        {
+            var linesOnScreen   = _textBox.LinesOnScreen; 
+            var startline   = currentLine;
+            var endline     = currentLine + (linesOnScreen / 2);
+            var start       = _textBox.Lines[startline].Position;
+            var end         = _textBox.Lines[endline].Position;
+            _textBox.ScrollRange(start, end);
+            _textBox.Update();
         }
 
         #endregion
@@ -331,7 +359,19 @@ namespace MidiChord
 
                 _midiLivePlayer.Start();
 
+                resetMarker();
+
                 EnterPlayingMode();
+            }
+        }
+
+        private void resetMarker()
+        {
+            _lastLineMarker = -1;
+
+            foreach(var line in _textBox.Lines)
+            {
+                line.MarkerDelete(CURRENT_POSITION_MARKER);
             }
         }
 
@@ -622,7 +662,19 @@ namespace MidiChord
             _textBox.Lexer = Lexer.Cpp;
 
             _textBox.SetKeywords(0, "Title title Verse verse Intro intro chorus Chorus Outro outro drum riff label repeat");
-            _textBox.SetKeywords(1, "C D E F G");
+            _textBox.SetKeywords(1, _chordList.GetChordsInOneString());
+
+            // Create a symbol margin
+            _textBox.Margins[1].Type = MarginType.Symbol;
+
+            // Define a "breakpoint" marker (0) 
+            _textBox.Markers[CURRENT_POSITION_MARKER].Symbol = MarkerSymbol.Arrow;
+            _textBox.Markers[CURRENT_POSITION_MARKER].SetForeColor(Color.Green);
+            _textBox.Markers[CURRENT_POSITION_MARKER].SetBackColor(Color.LightGreen);
+
+            // Add to line 1
+            // _textBox.Lines[1].MarkerAdd(0);
+            //_textBox.Lines[1].MarkerAdd(1);
 
         }
 

@@ -16,7 +16,7 @@ namespace MidiChord
         public SongItemInstrument ItemInstrument;
         public string Data;
         public string Part;
-        public int ParserPosition;
+        public int LineNumber;
         public int BeatIndex;
         public GeneralMidiInstrument Instrument;
 
@@ -25,10 +25,16 @@ namespace MidiChord
             switch(Type)
             {
                 case SongItemType.CHANGE_INSTRUMENT:
-                    return string.Format("{0}: {1} [{2}]", BeatIndex, "Instrument", Instrument.ToString());
+                    return string.Format("{0}: {1} [{2}] (line {3})", BeatIndex, "INSTRUMENT", Instrument.ToString(), LineNumber);
+
+                case SongItemType.START_DRUM_PATTERN:
+                    return string.Format("{0}: {1} [{2}] (line {3})", BeatIndex, "START DRUM", ItemInstrument.ToString(), LineNumber);
+
+                case SongItemType.STOP_DRUM_PATTERN:
+                    return string.Format("{0}: {1} [{2}] (line {3})", BeatIndex, "STOP DRUM", ItemInstrument.ToString(), LineNumber);
 
                 default:
-                    return string.Format("{0}: {1} [{2}]", BeatIndex, Data, Type.ToString());
+                    return string.Format("{0}: {1} [{2}] (line {3})", BeatIndex, Data, Type.ToString(), LineNumber);
             }
         }
     }
