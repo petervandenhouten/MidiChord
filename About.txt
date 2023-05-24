@@ -9,3 +9,5 @@ ScintillaNET
 
 Peter vd Houten
 (c) 2023
+
+https://github.com/petervandenhouten/MidiChord

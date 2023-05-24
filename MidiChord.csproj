@@ -152,6 +152,7 @@
     <Content Include="Chords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="README.md" />
     <None Include="Resources\Metronome.png" />
     <Content Include="Drums.txt" />
     <Content Include="Specifications.txt" />
