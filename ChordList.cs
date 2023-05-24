@@ -118,6 +118,7 @@ namespace MidiChord
                 ["B"] = new string[] { "A", "D#", "F#" },
 
                 ["C"] = new string[] { "C", "E", "G" },
+                ["C7"] = new string[] { "C", "E", "G", "Bb" },
 
                 ["C#"] = new string[] { "Db", "F", "Ab" },
                 ["Db"] = new string[] { "Db", "F", "Ab" },

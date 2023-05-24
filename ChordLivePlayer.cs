@@ -190,7 +190,7 @@ namespace MidiChord
 
             if (EnableMetronome == true)
             {
-                // _midiOutputDevice.Send(_metronomeNoteOff.Result);
+                _midiOutputDevice.Send(_metronomeNoteOff);
                 if (_beatIndex % 4 == 0)
                 {
                     _midiOutputDevice.Send( _metronomeFirstBeatInstrument);
@@ -230,19 +230,22 @@ namespace MidiChord
 
         private void playDrumPattern()
         {
-            _midiOutputDevice.Send(_drumInstument);
-            
-            for ( int drum =0; drum<3; drum++)
+            if (_beatIndex < _lastBeatIndex)
             {
-                if (_drumPatterns[drum] != null)
+                _midiOutputDevice.Send(_drumInstument);
+
+                for (int drum = 0; drum < 3; drum++)
                 {
-                    int beat_in_measure = (base._beatIndex % 4);
-                    if (beat_in_measure < _drumPatterns[drum].NotesOn.Count)
+                    if (_drumPatterns[drum] != null)
                     {
-                        var midiEvent = _drumPatterns[drum].NotesOn[beat_in_measure];
-                        if (midiEvent != null)
+                        int beat_in_measure = (base._beatIndex % 4);
+                        if (beat_in_measure < _drumPatterns[drum].NotesOn.Count)
                         {
-                            _midiOutputDevice.Send(midiEvent);
+                            var midiEvent = _drumPatterns[drum].NotesOn[beat_in_measure];
+                            if (midiEvent != null)
+                            {
+                                _midiOutputDevice.Send(midiEvent);
+                            }
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -793,7 +794,14 @@ namespace MidiChord
                 {
                     if (firstChar.Equals(@"["))
                     {
-                        _parserChordMode = ParserChordMode.MEASURE;
+                        if ( checkForBeatChordsInSongText(txt, pointer))
+                        {
+                            _parserChordMode = ParserChordMode.BEAT;
+                        }
+                        else
+                        {
+                            _parserChordMode = ParserChordMode.MEASURE;
+                        }
                         movepointer = 1;
                     }
                     else if (firstChar.Equals(@"]"))
@@ -828,6 +836,14 @@ namespace MidiChord
                 }
                 pointer += movepointer;
             }
+        }
+
+        private bool checkForBeatChordsInSongText(string txt, int pointer)
+        {
+            int end = txt.Substring(pointer).IndexOf("]");
+            string substring = txt.Substring(pointer+1,end-1);
+            // if string between [ ] contains spaces that we parse the letters as beat chords
+            return substring.Contains(" ");
         }
 
         private int handleBeatChord(string txt, int pointer)

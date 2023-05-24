@@ -1,0 +1,11 @@
+﻿MidiChord
+
+Text-based song editor with chords and drum
+for composing and practising music.
+
+Made with help of:
+Sanford.Multimedia.Midi
+ScintillaNET
+
+Peter vd Houten
+(c) 2023

@@ -15,8 +15,17 @@ namespace UnitTestMidiChord
             Assert.AreEqual(4, parser.MeasureCount);
             Assert.AreEqual(16, parser.BeatCount);
             Assert.AreEqual(4, parser.GetNumberOfChords());
+        }
 
+        [TestMethod]
+        public void When_SongText_Then_Multiple_Chords_In_A_Measure_Are_Detected()
+        {
+            var parser = new ChordParser();
 
+            parser.Parse(new string[] { "[C * D *] Hello, How [F * G *] Are you?" });
+            Assert.AreEqual(2, parser.MeasureCount);
+            Assert.AreEqual(8, parser.BeatCount);
+            Assert.AreEqual(4, parser.GetNumberOfChords());
         }
 
         [TestMethod]

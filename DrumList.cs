@@ -46,10 +46,32 @@ namespace MidiChord
         {
             return new Dictionary<string, int>
             {
-                ["B"] = 35,     // acoustic base
-                ["S"] = 38,     // acoustic snare
-                ["LT"] = 45,    // low tom
-                ["HT"] = 50     // high tom
+                ["b"] = 35,     // acoustic base drum
+                ["B"] = 36,     // base drum
+
+                ["s"] = 38,     // acoustic snare
+                ["S"] = 40,     // snare
+
+                ["f"] = 41,     // low floor tom
+                ["F"] = 43,      // high floor tom
+                ["t"] = 45,      // low tom
+                ["T"] = 50,     // high tom
+                ["m"] = 47,      // low mid tom
+                ["M"] = 48,      // hi mid tom
+
+                ["C"] = 49,    // Crash cymbal
+                ["c"] = 51,    // Ride cymbal
+                ["SC"] = 51,    // Splash cymbal
+
+                ["h"] = 42,   // close hi-hat
+                ["H"] = 46,   // open hi-hat
+
+                ["w"] = 77,  // low wood-block
+                ["W"] = 76,  // high wood-block
+                ["st"] = 37,  // side stick
+
+                ["A"] = 54, // tambourine
+
             };
         }
     }

@@ -146,10 +146,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="About.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="Chords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\Metronome.png" />
+    <Content Include="Drums.txt" />
     <Content Include="Specifications.txt" />
     <None Include="Resources\Sound.png" />
     <None Include="Resources\NewDocument.png" />

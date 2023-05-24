@@ -6,6 +6,7 @@ A#:Bb,D,F
 Bb:Bb,D,F
 B:A,D#,F#
 C:C,E,G
+C7:C,E,G,Bb
 C#:Db,F,Ab
 Db:Db,F,Ab
 D:D,F#,A

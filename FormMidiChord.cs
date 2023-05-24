@@ -176,13 +176,13 @@ namespace MidiChord
 
         private void manualToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //var help = File.ReadAllLines("HelpTextFile.txt");
-            //var dlg = new StringListDialog("Logging");
-            //dlg.SetText(help);
-            //dlg.ShowDialog();
+            var help = File.ReadAllLines("HelpTextFile.txt");
+            var dlg = new StringListDialog("Logging");
+            dlg.SetText(help);
+            dlg.ShowDialog();
 
-            var help = File.ReadAllText("HelpTextFile.txt");
-            MessageBox.Show(help);
+            //var help = File.ReadAllText("HelpTextFile.txt");
+            //MessageBox.Show(help);
 
         }
 
@@ -690,5 +690,11 @@ namespace MidiChord
             return text_lines.ToArray();
         }
         #endregion
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var help = File.ReadAllText("About.txt");
+            MessageBox.Show(help);
+        }
     }
 }

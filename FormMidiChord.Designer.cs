@@ -360,32 +360,33 @@
             // manualToolStripMenuItem
             // 
             this.manualToolStripMenuItem.Name = "manualToolStripMenuItem";
-            this.manualToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.manualToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.manualToolStripMenuItem.Text = "Manual";
             this.manualToolStripMenuItem.Click += new System.EventHandler(this.manualToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(150, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(177, 6);
             // 
             // debugLoggingToolStripMenuItem
             // 
             this.debugLoggingToolStripMenuItem.Name = "debugLoggingToolStripMenuItem";
-            this.debugLoggingToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.debugLoggingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.debugLoggingToolStripMenuItem.Text = "Debug logging";
             this.debugLoggingToolStripMenuItem.Click += new System.EventHandler(this.debugLoggingToolStripMenuItem_Click);
             // 
             // debugSongToolStripMenuItem
             // 
             this.debugSongToolStripMenuItem.Name = "debugSongToolStripMenuItem";
-            this.debugSongToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.debugSongToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.debugSongToolStripMenuItem.Text = "Debug song";
             this.debugSongToolStripMenuItem.Click += new System.EventHandler(this.debugSongToolStripMenuItem_Click);
             // 

@@ -82,9 +82,10 @@ namespace MidiChord
 
             BeatsPerMinute = 60;
             SongInstrument = GeneralMidiInstrument.AcousticGrandPiano;
-            MetronomeFirstBeatInstrument = GeneralMidiInstrument.Woodblock;
-            MetronomeInstrument = GeneralMidiInstrument.Agogo;
-            MetronomeMidiChannel = 1;
+            MetronomeFirstBeatInstrument = GeneralMidiInstrument.Woodblock; //  (GeneralMidiInstrument)31; 
+            MetronomeInstrument = GeneralMidiInstrument.Agogo; //  (GeneralMidiInstrument)33; //  ;
+            MetronomeMidiChannel = 9;
+            MetronomeVolume = 60;
             ChordMidiChannel = 0;
             EnableMetronome = true;
             DrumMidiChannel = 9;
@@ -143,6 +144,7 @@ namespace MidiChord
             builder.Command = ChannelCommand.ProgramChange;
             builder.MidiChannel = MetronomeMidiChannel;
             builder.Data1 = (int)MetronomeFirstBeatInstrument;
+            builder.Data2 = MetronomeVolume;
             builder.Build();
             _metronomeFirstBeatInstrument = builder.Result;
 
@@ -151,6 +153,7 @@ namespace MidiChord
             builder.Command = ChannelCommand.ProgramChange;
             builder.MidiChannel = MetronomeMidiChannel;
             builder.Data1 = (int)MetronomeFirstBeatInstrument;
+            builder.Data2 = MetronomeVolume;
             _metronomeBeatInstument = builder.Result;
 
             builder = new ChannelMessageBuilder();
