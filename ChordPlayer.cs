@@ -9,25 +9,25 @@ using Sanford.Multimedia.Midi;
 
 namespace MidiChord
 {
+    // Converts (parsed) song items in midi commands
+    // Does not communicate with midi devices or IO.
     public class ChordPlayer
     {
         // Base class internal data
         protected List<SongItem> _data = null;
-        protected int _beatIndex = 0;
-        protected int _lastBeatIndex = 0;
-        internal MidiChord _lastMidiChord = null;
-        protected DrumPattern[] _drumPatterns = new DrumPattern[3];
-        //internal MidiDrum _lastMidiDrumLeft = null;
-        //internal MidiDrum _lastMidiDrumRight = null;
-        //internal MidiDrum _lastMidiDrumFoot = null;
+
+        private MidiChord _lastMidiChord = null;
+
+        internal DrumPattern[] _drumPatterns = new DrumPattern[3];
         internal MidiRiff _lastMidiRiff = null;
+        internal BassPattern _bassPattern = null;
 
         public enum DrumEvent { START_PATTERN, STOP_PATTERN };
         public enum DrumType { LEFT_HAND, RIGHT_HAND, FOOT };
 
         private readonly ChordList _chordList;
         private readonly DrumList _drumList;
-
+        private readonly MidiCommandFactory _midiFactory = new MidiCommandFactory();
         internal class MidiChord
         {
             internal string Name;
@@ -35,7 +35,7 @@ namespace MidiChord
             internal List<ChannelMessage> NotesOff = new List<ChannelMessage>();
         }
 
-        protected class DrumPattern
+        internal class DrumPattern
         {
             internal string Name;
             internal DrumType Type;
@@ -52,6 +52,11 @@ namespace MidiChord
             internal List<ChannelMessage> NotesOff = new List<ChannelMessage>();
         }
 
+        internal class BassPattern
+        {
+            internal string Name;
+        }
+
         protected ChannelMessage _metronomeFirstBeatInstrument;
         protected ChannelMessage _metronomeBeatInstument;
         protected ChannelMessage _metronomeNoteOn;
@@ -62,6 +67,10 @@ namespace MidiChord
         protected MetaMessage _chordMetaText;
         protected MetaMessage _metronomeMetaText;
         protected MetaMessage _drumMetaText;
+
+        public int CurrentBeatIndex { get; private set; }
+
+        public int LastBeatIndex { get; private set; }
 
         public GeneralMidiInstrument SongInstrument { get; set; }
         public GeneralMidiInstrument MetronomeFirstBeatInstrument { get; set; }
@@ -74,6 +83,9 @@ namespace MidiChord
         public int DrumVolume { get; set; }
         public int ChordVolume { get; set; }
         public int MetronomeVolume { get; set; }
+
+        // Set this to true when saving to MIDI file
+        public bool SendNoteOffForDrums { get; set; }
 
         public ChordPlayer(ChordList chordNotes, DrumList drumNotes)
         {
@@ -92,31 +104,34 @@ namespace MidiChord
             DrumVolume = 127;
             ChordVolume = 127;
             MetronomeVolume = 60;
+            SendNoteOffForDrums = false;
+
+            createCommonMidiMessages();
         }
 
         public void SetSong(List<SongItem> song)
         {
             _data = song;
             Reset();
-            _lastBeatIndex = GetMaxIndex();
+            LastBeatIndex = GetMaxIndex();
         }
 
 
         protected void Reset()
         {
-            _beatIndex = 0;
-            createCommonMidiMessages();
-            ResetDrumPatterns();
+            CurrentBeatIndex    = 0;
+            _lastMidiChord      = null;
+            resetDrumPatterns();
         }
 
-        private void ResetDrumPatterns()
+        private void resetDrumPatterns()
         {
             _drumPatterns[0] = null;
             _drumPatterns[1] = null;
             _drumPatterns[2] = null;
         }
 
-        protected void createCommonMidiMessages()
+        private void createCommonMidiMessages()
         {
             // create notes for metronome
             int metronomeNote = 60;
@@ -210,19 +225,8 @@ namespace MidiChord
 
                     if (data > 0)
                     {
-                        ChannelMessageBuilder builder = new ChannelMessageBuilder();
-                        builder.Command = ChannelCommand.NoteOn;
-                        builder.MidiChannel = ChordMidiChannel;
-                        builder.Data1 = data;
-                        builder.Data2 = ChordVolume;
-                        builder.Build();
-
-                        newChord.NotesOn.Add(builder.Result);
-
-                        builder.Command = ChannelCommand.NoteOff;
-                        builder.Build();
-
-                        newChord.NotesOff.Add(builder.Result);
+                        newChord.NotesOn .Add(_midiFactory.NoteOn (ChordMidiChannel, data, ChordVolume));
+                        newChord.NotesOff.Add(_midiFactory.NoteOff(ChordMidiChannel, data));
                         newChord.Name = chord;
                     }
                 }
@@ -234,7 +238,7 @@ namespace MidiChord
             return newChord;
         }
 
-        protected DrumPattern GetDrumPattern(string drumpattern)
+        private DrumPattern getDrumPattern(string drumpattern)
         {
             char[] drumSeperators = { ' ' };
             var drums = drumpattern.Split(drumSeperators, StringSplitOptions.RemoveEmptyEntries);
@@ -262,23 +266,8 @@ namespace MidiChord
 
                     if (data > 0)
                     {
-                        var builder = new ChannelMessageBuilder();
-                        builder.Command = ChannelCommand.NoteOn;
-                        builder.MidiChannel = DrumMidiChannel;
-                        builder.Data1 = data;
-                        builder.Data2 = DrumVolume;
-                        builder.Build();
-
-                        newDrum.NotesOn.Add(builder.Result);
-
-                        builder = new ChannelMessageBuilder();
-                        builder.Command = ChannelCommand.NoteOff;
-                        builder.MidiChannel = DrumMidiChannel;
-                        builder.Data1 = data;
-                        builder.Data2 = DrumVolume;
-                        builder.Build();
-
-                        newDrum.NotesOff.Add(builder.Result);
+                        newDrum.NotesOn. Add(_midiFactory.NoteOn(DrumMidiChannel, data, DrumVolume));
+                        newDrum.NotesOff.Add(_midiFactory.NoteOff(DrumMidiChannel, data));
                     }
                     else
                     {
@@ -296,16 +285,6 @@ namespace MidiChord
             return _drumList.GetDrum(drum);
         }
 
-        protected ChannelMessage GetMidiProgram(GeneralMidiInstrument instrument)
-        {
-            ChannelMessageBuilder builder = new ChannelMessageBuilder();
-            builder.Command = ChannelCommand.ProgramChange;
-            builder.MidiChannel = 0;
-            builder.Data1 = (int)instrument;
-            builder.Build();
-
-            return builder.Result;
-        }
 
         protected int GetMidiData(string note)
         {
@@ -383,6 +362,161 @@ namespace MidiChord
             }
         }
 
+        protected int NextBeatIndex()
+        {
+            return ++CurrentBeatIndex;
+        }
 
+        // converts song items into grouped midi commands
+        // ready to but send to output device or midi file
+        public MidiCommands GetMidiCommandsAtBeat(int beatIndex)
+        {
+            string currentLabel = "";
+            int currentParserLine = 0;
+
+            var midi = new MidiCommands();
+
+            // find ALL notes on the beat index
+            foreach (var entry in _data)
+            {
+                if (entry.Type == SongItem.SongItemType.CHANGE_INSTRUMENT)
+                {
+                    midi.MetaData.Add(_midiFactory.Instrument(entry.Instrument));
+                }
+                else if (entry.Type == SongItem.SongItemType.MEASURE_CHORD ||
+                         entry.Type == SongItem.SongItemType.BEAT_CHORD)
+                {
+                    MidiChord midiChord = GetMidiChord(entry.Data);
+
+                    if (midiChord == null)
+                    {
+                        midi.ErrorMessage = "Unknown chord: '" + entry.Data + "'";
+                    }
+
+                    // Find on which beat we are (every tick we move a next beat)
+                    if (entry.BeatIndex == beatIndex)
+                    {
+                        if (_lastMidiChord != null)
+                        {
+                            foreach (var midiEvent in _lastMidiChord.NotesOff)
+                            {
+                                midi.Chords.Add(midiEvent);
+                            }
+                        }
+                        foreach (var midiEvent in midiChord.NotesOn)
+                        {
+                            midi.Chords.Add(midiEvent);
+                        }
+                        _lastMidiChord = midiChord;
+                    }
+                }
+                else if (entry.Type == SongItem.SongItemType.START_DRUM_PATTERN)
+                {
+                    DrumPattern drumPattern = getDrumPattern(entry.Data);
+
+                    if (drumPattern == null)
+                    {
+                        midi.ErrorMessage = "Invalid drum pattern: '" + entry.Data + "'";
+                    }
+
+                    if (entry.BeatIndex <= beatIndex)
+                    {
+                        // Activate pattern
+                        int drumPatternIndex = getDrumIndex(entry.ItemInstrument);
+                        if (drumPatternIndex >= 0)
+                        {
+                            _drumPatterns[drumPatternIndex] = drumPattern;
+                        }
+                    }
+                }
+                else if (entry.Type == SongItem.SongItemType.STOP_DRUM_PATTERN)
+                {
+                    if (entry.BeatIndex <= beatIndex)
+                    {
+                        // deactivate
+                        int drumPatternIndex = getDrumIndex(entry.ItemInstrument);
+                        if (drumPatternIndex >= 0)
+                        {
+                            _drumPatterns[drumPatternIndex] = null;
+                        }
+                    }
+                }
+
+                // Update part and line of the song
+                if (entry.BeatIndex <= beatIndex)
+                {
+                    if (!string.IsNullOrEmpty(entry.Part))
+                    {
+                        currentLabel = entry.Part;
+                    }
+                    currentParserLine = Math.Max(entry.LineNumber, currentParserLine);
+                }
+            }
+
+            // Generate DRUM midi messages
+            if (beatIndex < LastBeatIndex)
+            {
+                for (int drum = 0; drum < 3; drum++)
+                {
+                    if (_drumPatterns[drum] != null)
+                    {
+                        int beat_in_measure = (beatIndex % 4);
+                        if (beat_in_measure < _drumPatterns[drum].NotesOn.Count)
+                        {
+                            var midiEvent = _drumPatterns[drum].NotesOn[beat_in_measure];
+                            if (midiEvent != null)
+                            {
+                                midi.Drums.Add(midiEvent);
+                            }
+                        }
+                        if (SendNoteOffForDrums)
+                        {
+                            if (beat_in_measure < _drumPatterns[drum].NotesOff.Count)
+                            {
+                                var midiEvent = _drumPatterns[drum].NotesOff[beat_in_measure];
+                                if (midiEvent != null)
+                                {
+                                    midi.Drums.Add(midiEvent);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // The metronome is active for all measures/beats
+            if (EnableMetronome == true)
+            {
+                midi.Metronome.Add(_metronomeNoteOff);
+                if (beatIndex % 4 == 0)
+                {
+                    midi.Metronome.Add(_metronomeFirstBeatInstrument);
+                }
+                else
+                {
+                    midi.Metronome.Add(_metronomeBeatInstument);
+                }
+                midi.Metronome.Add(_metronomeNoteOn);
+            }
+
+            midi.ChordName = _lastMidiChord != null ? _lastMidiChord.Name : "";
+
+            if (beatIndex > LastBeatIndex)
+            {
+                if (_lastMidiChord != null)
+                {
+                    foreach (var midiEvent in _lastMidiChord.NotesOff)
+                    {
+                        midi.Chords.Add(midiEvent);
+                    }
+                }
+                midi.EndOfSong = true;
+            }
+
+            midi.Part = currentLabel;
+            midi.ParserLine = currentParserLine;
+
+            return midi;
+        }
     }
 }

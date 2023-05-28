@@ -14,6 +14,25 @@ namespace UnitTestMidiChord
         }
 
         [TestMethod]
+        public void When_Data_Has_Instrument_Command_Without_Colon_Then_Name_Of_Instrument_Is_Found()
+        {
+            var parser = new ChordParser();
+
+            parser.Parse(new string[] { "{instrument Marimba}" });
+            Assert.AreEqual("Marimba", parser.Instrument);
+            Assert.AreEqual(1, parser.GetNumberOfInstrumentChanges());
+        }
+
+        public void When_Data_Has_Instrument_Command_Without_Colon_And_With_Spaces_Then_Name_Of_Instrument_Is_Found()
+        {
+            var parser = new ChordParser();
+
+            parser.Parse(new string[] { "  {instrument Marimba}" });
+            Assert.AreEqual("Marimba", parser.Instrument);
+            Assert.AreEqual(1, parser.GetNumberOfInstrumentChanges());
+        }
+
+        [TestMethod]
         public void When_Data_Has_Instrument_Command_Then_Name_Of_Instrument_Is_Found()
         {
             var parser = new ChordParser();
@@ -24,11 +43,21 @@ namespace UnitTestMidiChord
         }
 
         [TestMethod]
+        public void When_Data_Has_Instrument_Command_With_Spaces_Then_Name_Of_Instrument_Is_Found()
+        {
+            var parser = new ChordParser();
+
+            parser.Parse(new string[] { "     {instrument: Marimba}" });
+            Assert.AreEqual("Marimba", parser.Instrument);
+            Assert.AreEqual(1, parser.GetNumberOfInstrumentChanges());
+        }
+
+        [TestMethod]
         public void When_Data_Has_Command_With_Unknown_Instrument_Then_Name_Of_Instrument_Is_Not_Found()
         {
             var parser = new ChordParser();
 
-            parser.Parse(new string[] { "{instrument: X}" });
+            parser.Parse(new string[] { "{instrument X}" });
             Assert.AreEqual("AcousticGrandPiano", parser.Instrument);
             Assert.AreEqual(0, parser.GetNumberOfInstrumentChanges());
         }

@@ -55,7 +55,6 @@
             this.instrumentComboBox.Name = "instrumentComboBox";
             this.instrumentComboBox.Size = new System.Drawing.Size(152, 21);
             this.instrumentComboBox.TabIndex = 12;
-            this.instrumentComboBox.SelectedIndexChanged += new System.EventHandler(this.instrumentComboBox_SelectedIndexChanged);
             // 
             // cancelButton
             // 

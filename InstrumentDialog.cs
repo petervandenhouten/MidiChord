@@ -82,10 +82,5 @@ namespace Sanford.Multimedia.Midi.UI
                 _midiPlayer.Mute();
             }
         }
-
-        private void instrumentComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // PreviewInstrument();
-        }
     }
 }

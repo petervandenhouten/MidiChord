@@ -516,9 +516,11 @@ namespace MidiChord
 
             int pos1 = txt.IndexOf('{');
             int pos2 = txt.IndexOf('}');
-            int pos3 = txt.IndexOf(':');
+            int pos3 = txt.IndexOf(':', pos1);
+            int pos4 = txt.IndexOf(' ', pos1);
 
             if (pos2 < 0) return ParserCommand.NONE;
+            if (pos3 < 0) pos3 = pos4;
 
             string command = pos3 < 0 ? txt.Substring(pos1 + 1, pos2 - pos1 - 1)
                                       : txt.Substring(pos1 + 1, pos3 - pos1 - 1);
@@ -574,7 +576,8 @@ namespace MidiChord
                     Type = SongItem.SongItemType.STOP_DRUM_PATTERN,
                     ItemInstrument = getSongItemInstrument(drumtype),
                     LineNumber = _parserLine,
-                    BeatIndex = _beatIndex
+                    BeatIndex = _beatIndex,
+                    Part = _currentLabel,
                 };
                 Log("Stop drum pattern: " + drumtype.ToString());
                 _parserOutput.Add(drum);
@@ -1144,6 +1147,11 @@ namespace MidiChord
                 }
             }
             return count;
+        }
+
+        public int GetNumberOfLabels()
+        {
+            return _labels.Count;
         }
 
         public int GetNumberOfInstrumentChanges()

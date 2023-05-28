@@ -126,4 +126,15 @@
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>240, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="toolStripButtonCountDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADPSURBVDhPY6APiN31H8oiEYA0omOaA0VFxQdA/J8I/ACq
+        BRWAJOXk5CQJYZA6qBZUMGoAfgDShIQhsaCgoLAHyLkPVbBQXl7+I5DOhsptAbKfA+laEB8rACqIgRrA
+        DFToDzTAAci/BpKTkpISBoq5A/FREB9rStTS0mKDGsCgpKTED1R8BIhbQHygeDYQPwPiDhAfK0AygBFo
+        +2Gg5l4QG4iZZWVlpVRUVJSB8m9BarECmAFAhTJAGhZA942NjVmBBl4E4tdAfhFUORpgYAAAxzdsIJGh
+        CmAAAAAASUVORK5CYII=
+</value>
+  </data>
 </root>

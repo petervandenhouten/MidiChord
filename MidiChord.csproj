@@ -102,6 +102,8 @@
     <Compile Include="InstrumentDialog.designer.cs">
       <DependentUpon>InstrumentDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="MidiCommandFactory.cs" />
+    <Compile Include="MidiCommands.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongChord.cs" />

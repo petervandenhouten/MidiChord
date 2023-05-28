@@ -174,6 +174,25 @@ namespace MidiChord
 
         #region Menu items
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var help = File.ReadAllText("About.txt");
+            MessageBox.Show(help);
+        }
+
+        private void instrumentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InstrumentDialog dlg = new InstrumentDialog(_midiLivePlayer);
+
+            dlg.Instrument = _instrument;
+
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var name = dlg.Instrument.ToString();
+                _textBox.InsertText(_textBox.AnchorPosition, String.Format("{{instrument: {0}}}", name));
+            }
+        }
+
         private void manualToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var help = File.ReadAllLines("HelpTextFile.txt");
@@ -240,8 +259,9 @@ namespace MidiChord
             ChordToMidiConvertor midiConverter = new ChordToMidiConvertor(_chordList, _drumList);
             midiConverter.SetSong(song);
 
-            midiConverter.BeatsPerMinute = _beatsPerMinute;
-            midiConverter.SongInstrument = _instrument;
+            midiConverter.BeatsPerMinute    = _beatsPerMinute;
+            midiConverter.SongInstrument    = _instrument;
+            midiConverter.EnableMetronome   = true;
             midiConverter.MetronomeFirstBeatInstrument = _metronomeInstrument1;
             midiConverter.MetronomeInstrument = _metronomeInstrument2;
 
@@ -299,9 +319,16 @@ namespace MidiChord
 
         #region Toolbar buttons
 
+        private void toolStripButtonCountDown_Click(object sender, EventArgs e)
+        {
+            _midiLivePlayer.PlayCountDown = !_midiLivePlayer.PlayCountDown;
+            UpdateToolStripButtons();
+        }
+
         private void UpdateToolStripButtons()
         {
             toolStripButtonMetronome.Checked = _midiLivePlayer.EnableMetronome;
+            toolStripButtonCountDown.Checked = _midiLivePlayer.PlayCountDown;
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -691,10 +718,5 @@ namespace MidiChord
         }
         #endregion
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var help = File.ReadAllText("About.txt");
-            MessageBox.Show(help);
-        }
     }
 }
