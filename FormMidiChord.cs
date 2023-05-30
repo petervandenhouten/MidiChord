@@ -9,6 +9,7 @@ using System.Linq;
 using ScintillaNET;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing;
+using System.Reflection;
 
 namespace MidiChord
 {
@@ -176,8 +177,17 @@ namespace MidiChord
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var help = File.ReadAllText("About.txt");
-            MessageBox.Show(help);
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "MidiChord.About.txt";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string about = reader.ReadToEnd();
+                    MessageBox.Show(about);
+                }
+            }
         }
 
         private void instrumentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -195,14 +205,19 @@ namespace MidiChord
 
         private void manualToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var help = File.ReadAllLines("HelpTextFile.txt");
-            var dlg = new StringListDialog("Logging");
-            dlg.SetText(help);
-            dlg.ShowDialog();
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "MidiChord.HelpTextFile.txt";
 
-            //var help = File.ReadAllText("HelpTextFile.txt");
-            //MessageBox.Show(help);
-
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string helptxt = reader.ReadToEnd();
+                    var dlg = new StringListDialog("Help");
+                    dlg.SetText(helptxt.Split('\n'));
+                    dlg.ShowDialog();
+                }
+            }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -266,7 +281,13 @@ namespace MidiChord
             midiConverter.MetronomeInstrument = _metronomeInstrument2;
 
             // save sequence
-            midiConverter.Save("test.mid");
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.FileName = Path.ChangeExtension(Path.GetFileName(_filename), ".mid");
+            dlg.InitialDirectory = Path.GetDirectoryName(_filename);
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                midiConverter.Save(dlg.FileName);
+            }
         }
 
         private void debugSongToolStripMenuItem_Click(object sender, EventArgs e)

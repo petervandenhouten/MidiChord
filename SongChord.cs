@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MidiChord
 {
@@ -22,19 +23,24 @@ namespace MidiChord
 
         public override string ToString()
         {
-            switch(Type)
+            int measure = (BeatIndex / 4) + 1;
+            int beat_in_measure = (BeatIndex % 4) + 1;
+
+            var beat_str = measure.ToString() + "." + beat_in_measure.ToString();
+
+            switch (Type)
             {
                 case SongItemType.CHANGE_INSTRUMENT:
-                    return string.Format("{0}: {1} [{2}] (line {3})", BeatIndex, "INSTRUMENT", Instrument.ToString(), LineNumber);
+                    return string.Format("[{0}] {1}: [{2}] (line {3})", beat_str, "INSTRUMENT", Instrument.ToString(), LineNumber);
 
                 case SongItemType.START_DRUM_PATTERN:
-                    return string.Format("{0}: {1} [{2}] (line {3})", BeatIndex, "START DRUM", ItemInstrument.ToString(), LineNumber);
+                    return string.Format("[{0}] {1}: [{2}] (line {3})", beat_str, "START DRUM", ItemInstrument.ToString(), LineNumber);
 
                 case SongItemType.STOP_DRUM_PATTERN:
-                    return string.Format("{0}: {1} [{2}] (line {3})", BeatIndex, "STOP DRUM", ItemInstrument.ToString(), LineNumber);
+                    return string.Format("[{0}] {1}: [{2}] (line {3})", beat_str, "STOP DRUM", ItemInstrument.ToString(), LineNumber);
 
                 default:
-                    return string.Format("{0}: {1} [{2}] (line {3})", BeatIndex, Data, Type.ToString(), LineNumber);
+                    return string.Format("[{0}] {1} [{2}] (line {3})", beat_str, Data, Type.ToString(), LineNumber);
             }
         }
     }

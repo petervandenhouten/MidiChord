@@ -1,0 +1,52 @@
+﻿<< Measures and beats: >>
+
+All measures are 4/4: Each measures has the duration of one whole note. One measure contains 4 beats. 
+A beat has the duration of one quarter note. Other timings are not supported.
+
+<< Chord and text lines: >>
+
+C = 1 measure with C chord of a whole note.
+C C = 2 measures with two times a C chord.
+C * = 2 measures with one time a C chord that is sustained into the second measure.
+C G Am F = 4 measures; 1st measure C chord, 2nd measure G chord, 3rd measure Am chord, 4rd measure F chord.
+
+|C| = 1 beat with C chord of a quarter note
+|C C| = 2 beats with C chords of a quarter note
+|C G Am D| = A measure with 4 chords of a quater note each.
+
+Example:
+   F        C        |F C7 C C7|
+Hello , how are you?
+
+<< Song text with embedded chords: >>
+
+[C] = 1 measure with C chord.
+[C G] = 2 beats with C on 1st beat and G chord on 2nd beat
+[C * G] = 3 beats with C chord on 1st beat, no chords on second beat, and G chord on 3rd beat.
+[C G Am * ] = 1 measure (of 4 beats) with chords on first three beats. No chord on 4th beat.
+[C G Am F] = 1 measure with 4 different chords on every beat.
+[* * * C] = 1 measure with no chord on first three beats, and a C chord on the 4th beat.
+
+Example:
+[F]Hello, how [C]are you?
+
+<< Drums patterns: >>
+---------------
+
+{drum left: b h S H} Set drum pattern for the 'left hand' for the next measures.
+You can set 3 drum pattern at the same time: left, right, foot. All drum pattern have 4 beats.
+{drum right:} Disables the drum pattern for the 'right hand'.
+
+(label) = a label used to indicate verses, chorus, breaks etc..
+-(label) = disable this part
+
+# Line with comment song text = A line of the song text.
+
+/ = start of comment
+/ = end of comment
+
+{title: name of the song}
+{instrument: X} = an instrument change
+{tempo: X} = beats per minute if number
+{transpose: +/- X}
+
