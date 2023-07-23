@@ -19,6 +19,7 @@ Eb:Eb,G,Bb
 E:E,G#,B
 Em:E,G,B
 F:F,A,C
+Fm:F,Ab,C
 F#:F#,A#,C#
 Gb:F#,A#,C#
 G:G,B,D

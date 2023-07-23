@@ -31,11 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMidiChord));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.exportMIDIFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,9 +45,6 @@
             this.keyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tempoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.songToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.soundOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
@@ -77,17 +71,24 @@
             this._StatusLabelInstrument = new System.Windows.Forms.ToolStripStatusLabel();
             this._statusMidiDevice = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this._textBox = new ScintillaNET.Scintilla();
             this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonCountDown = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMetronome = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPause = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonStop = new System.Windows.Forms.ToolStripButton();
-            this._textBox = new ScintillaNET.Scintilla();
-            this.toolStripButtonCountDown = new System.Windows.Forms.ToolStripButton();
+            this.toolStripTempo = new System.Windows.Forms.ToolStripButton();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -122,22 +123,6 @@
             this.toolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
             this.toolStripMenuItem1.Text = "File";
             // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.Image = global::MidiChord.Properties.Resources.NewDocument;
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.newToolStripMenuItem.Text = "New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Image = global::MidiChord.Properties.Resources.OpenFile;
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.openToolStripMenuItem.Text = "Open...";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-            // 
             // recentToolStripMenuItem
             // 
             this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
@@ -148,14 +133,6 @@
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(161, 6);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Save;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
@@ -193,44 +170,44 @@
             // chordToolStripMenuItem
             // 
             this.chordToolStripMenuItem.Name = "chordToolStripMenuItem";
-            this.chordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.chordToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.chordToolStripMenuItem.Text = "Chord...";
             // 
             // instrumentToolStripMenuItem
             // 
             this.instrumentToolStripMenuItem.Name = "instrumentToolStripMenuItem";
-            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.instrumentToolStripMenuItem.Text = "Instrument...";
             this.instrumentToolStripMenuItem.Click += new System.EventHandler(this.instrumentToolStripMenuItem_Click);
             // 
             // labelToolStripMenuItem
             // 
             this.labelToolStripMenuItem.Name = "labelToolStripMenuItem";
-            this.labelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.labelToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.labelToolStripMenuItem.Text = "Label...";
             // 
             // drumPatternToolStripMenuItem
             // 
             this.drumPatternToolStripMenuItem.Name = "drumPatternToolStripMenuItem";
-            this.drumPatternToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.drumPatternToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.drumPatternToolStripMenuItem.Text = "Drum pattern...";
             // 
             // repeatToolStripMenuItem
             // 
             this.repeatToolStripMenuItem.Name = "repeatToolStripMenuItem";
-            this.repeatToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.repeatToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.repeatToolStripMenuItem.Text = "Repeat...";
             // 
             // keyToolStripMenuItem
             // 
             this.keyToolStripMenuItem.Name = "keyToolStripMenuItem";
-            this.keyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.keyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.keyToolStripMenuItem.Text = "Key...";
             // 
             // tempoToolStripMenuItem
             // 
             this.tempoToolStripMenuItem.Name = "tempoToolStripMenuItem";
-            this.tempoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tempoToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.tempoToolStripMenuItem.Text = "Tempo...";
             // 
             // songToolStripMenuItem
@@ -248,33 +225,6 @@
             this.songToolStripMenuItem.Name = "songToolStripMenuItem";
             this.songToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.songToolStripMenuItem.Text = "Song";
-            // 
-            // playToolStripMenuItem
-            // 
-            this.playToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Play;
-            this.playToolStripMenuItem.Name = "playToolStripMenuItem";
-            this.playToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Space)));
-            this.playToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.playToolStripMenuItem.Text = "Play";
-            this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
-            // 
-            // pauseToolStripMenuItem
-            // 
-            this.pauseToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Pause;
-            this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-            this.pauseToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.pauseToolStripMenuItem.Text = "Pause";
-            this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
-            // 
-            // stopToolStripMenuItem
-            // 
-            this.stopToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Stop;
-            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.stopToolStripMenuItem.Text = "Stop";
-            this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
             // toolStripMenuItem5
             // 
@@ -333,7 +283,7 @@
             // 
             this.setDefaultInstrumentToolStripMenuItem1.Name = "setDefaultInstrumentToolStripMenuItem1";
             this.setDefaultInstrumentToolStripMenuItem1.Size = new System.Drawing.Size(218, 22);
-            this.setDefaultInstrumentToolStripMenuItem1.Text = "Select instrument...";
+            this.setDefaultInstrumentToolStripMenuItem1.Text = "Select instrument";
             this.setDefaultInstrumentToolStripMenuItem1.Click += new System.EventHandler(this.setDefaultInstrumentToolStripMenuItem1_Click);
             // 
             // mIDIChannelsToolStripMenuItem
@@ -493,6 +443,7 @@
             this.toolStripSeparator1,
             this.toolStripButtonCountDown,
             this.toolStripButtonMetronome,
+            this.toolStripTempo,
             this.toolStripSeparator2,
             this.toolStripButtonPlay,
             this.toolStripButtonPause,
@@ -502,6 +453,26 @@
             this.toolStrip1.Size = new System.Drawing.Size(376, 25);
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _textBox
+            // 
+            this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._textBox.Location = new System.Drawing.Point(0, 52);
+            this._textBox.Name = "_textBox";
+            this._textBox.Size = new System.Drawing.Size(375, 210);
+            this._textBox.TabIndex = 6;
             // 
             // toolStripButtonNew
             // 
@@ -534,10 +505,15 @@
             this.toolStripButton3.Text = "Save";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
-            // toolStripSeparator1
+            // toolStripButtonCountDown
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripButtonCountDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonCountDown.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonCountDown.Image")));
+            this.toolStripButtonCountDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonCountDown.Name = "toolStripButtonCountDown";
+            this.toolStripButtonCountDown.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonCountDown.Text = "Count down";
+            this.toolStripButtonCountDown.Click += new System.EventHandler(this.toolStripButtonCountDown_Click);
             // 
             // toolStripButtonMetronome
             // 
@@ -548,11 +524,6 @@
             this.toolStripButtonMetronome.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonMetronome.Text = "Metronome";
             this.toolStripButtonMetronome.Click += new System.EventHandler(this.toolStripButtonMetronome_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonPlay
             // 
@@ -585,25 +556,66 @@
             this.toolStripButtonStop.Text = "Stop";
             this.toolStripButtonStop.Click += new System.EventHandler(this.toolStripButtonStop_Click);
             // 
-            // _textBox
+            // toolStripTempo
             // 
-            this._textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._textBox.Location = new System.Drawing.Point(0, 52);
-            this._textBox.Name = "_textBox";
-            this._textBox.Size = new System.Drawing.Size(375, 210);
-            this._textBox.TabIndex = 6;
+            this.toolStripTempo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripTempo.Image = global::MidiChord.Properties.Resources.Timer;
+            this.toolStripTempo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripTempo.Name = "toolStripTempo";
+            this.toolStripTempo.Size = new System.Drawing.Size(23, 22);
+            this.toolStripTempo.Text = "Tempo (beats per minute)";
+            this.toolStripTempo.Click += new System.EventHandler(this.toolStripTempo_Click);
             // 
-            // toolStripButtonCountDown
+            // newToolStripMenuItem
             // 
-            this.toolStripButtonCountDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonCountDown.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonCountDown.Image")));
-            this.toolStripButtonCountDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonCountDown.Name = "toolStripButtonCountDown";
-            this.toolStripButtonCountDown.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonCountDown.Text = "Count down";
-            this.toolStripButtonCountDown.Click += new System.EventHandler(this.toolStripButtonCountDown_Click);
+            this.newToolStripMenuItem.Image = global::MidiChord.Properties.Resources.NewDocument;
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Image = global::MidiChord.Properties.Resources.OpenFile;
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.openToolStripMenuItem.Text = "Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Save;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // playToolStripMenuItem
+            // 
+            this.playToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Play;
+            this.playToolStripMenuItem.Name = "playToolStripMenuItem";
+            this.playToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Space)));
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.playToolStripMenuItem.Text = "Play";
+            this.playToolStripMenuItem.Click += new System.EventHandler(this.playToolStripMenuItem_Click);
+            // 
+            // pauseToolStripMenuItem
+            // 
+            this.pauseToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Pause;
+            this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
+            this.pauseToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.pauseToolStripMenuItem.Text = "Pause";
+            this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
+            // 
+            // stopToolStripMenuItem
+            // 
+            this.stopToolStripMenuItem.Image = global::MidiChord.Properties.Resources.Stop;
+            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
+            this.stopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.stopToolStripMenuItem.Text = "Stop";
+            this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
             // FormMidiChord
             // 
@@ -691,6 +703,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private ScintillaNET.Scintilla _textBox;
         private System.Windows.Forms.ToolStripButton toolStripButtonCountDown;
+        private System.Windows.Forms.ToolStripButton toolStripTempo;
     }
 }
 

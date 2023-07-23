@@ -5,9 +5,7 @@ using System.Collections.Generic;
 
 using Sanford.Multimedia.Midi;
 using Sanford.Multimedia.Midi.UI;
-using System.Linq;
 using ScintillaNET;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing;
 using System.Reflection;
 
@@ -52,7 +50,7 @@ namespace MidiChord
             // Default Settings
             
             SetMIDIDevice(0);
-            SetBeatsPerMinute(120);
+            SetBeatsPerMinute(140);
             SetInstrument(GeneralMidiInstrument.AcousticGrandPiano);
             SetMetronomeInstrument(GeneralMidiInstrument.TaikoDrum, GeneralMidiInstrument.Woodblock);
 
@@ -282,6 +280,7 @@ namespace MidiChord
 
             // save sequence
             SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "Midi files (*.mid)|*.mid|All files (*.*)|*.*";
             dlg.FileName = Path.ChangeExtension(Path.GetFileName(_filename), ".mid");
             dlg.InitialDirectory = Path.GetDirectoryName(_filename);
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -339,6 +338,11 @@ namespace MidiChord
         #endregion
 
         #region Toolbar buttons
+
+        private void toolStripTempo_Click(object sender, EventArgs e)
+        {
+            ChangeBeatsPerMinute();
+        }
 
         private void toolStripButtonCountDown_Click(object sender, EventArgs e)
         {
@@ -709,7 +713,7 @@ namespace MidiChord
             _textBox.Styles[Style.Cpp.CommentDocKeyword].ForeColor = Color.Orange;
             _textBox.Lexer = Lexer.Cpp;
 
-            _textBox.SetKeywords(0, "Title title Verse verse Intro intro chorus Chorus Outro outro drum riff label repeat");
+            _textBox.SetKeywords(0, "Title title Verse verse Intro intro Chorus chorus Outro outro drum riff label repeat instrument");
             _textBox.SetKeywords(1, _chordList.GetChordsInOneString());
 
             // Create a symbol margin

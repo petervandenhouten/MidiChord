@@ -157,6 +157,7 @@
     <Content Include="Drums.txt" />
     <Content Include="Resources\About.txt" />
     <Content Include="Resources\HelpTextFile.txt" />
+    <None Include="Resources\Timer.png" />
     <Content Include="Specifications.txt" />
     <None Include="Resources\Sound.png" />
     <None Include="Resources\NewDocument.png" />
