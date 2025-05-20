@@ -1,4 +1,4 @@
-# MidiChord
+# MIDI Chord
 
 A text-to-midi converter 
 For composing and practising music.  
